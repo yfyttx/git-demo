@@ -1,0 +1,3 @@
+C:\msys64\mingw64\bin\cmake.exe -E rm -f CMakeFiles\ldpc_constructor.dir/objects.a
+C:\msys64\mingw64\bin\ar.exe qc CMakeFiles\ldpc_constructor.dir/objects.a @CMakeFiles\ldpc_constructor.dir\objects1.rsp
+C:\msys64\mingw64\bin\c++.exe -Wl,--whole-archive CMakeFiles\ldpc_constructor.dir/objects.a -Wl,--no-whole-archive -o ldpc_constructor.exe -Wl,--out-implib,libldpc_constructor.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\ldpc_constructor.dir\linkLibs.rsp

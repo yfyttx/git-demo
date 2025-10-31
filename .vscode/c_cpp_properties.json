@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "Win32", // 或者 "Linux", "Mac"
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",  // <--- 添加这一行
+                "C:/msys64/mingw64/include/eigen3",  // <--- 添加这一行，为了Eigen库
+                "C:/Program Files/MATLAB/R2024b/extern/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.19041.0",
+            "compilerPath": "C:/msys64/mingw64/bin/g++.exe", // 路径可能不同
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64" // 或者 "clang-x64", "msvc-x64"
+        }
+    ],
+    "version": 4
+}
