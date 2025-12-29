@@ -1,25 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
-project(QuantumLDPCConstructor CXX)
+project(QuantumLDPC)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# 查找 Eigen3 (通常需要安装: sudo apt install libeigen3-dev 或 brew install eigen)
+find_package(Eigen3 REQUIRED)
 
-include_directories(
-    "C:/msys64/mingw64/include/eigen3"
-    ${PROJECT_SOURCE_DIR}/include
-)
+# 包含头文件目录
+include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(include)
 
-set(SOURCES
-    src/main.cpp
-    src/gf2p/gf2p.cpp
-    src/ldpc_codes/binary_codes.cpp
-    src/ldpc_codes/nonbinary_codes.cpp
-    src/utils/matrix_utils.cpp
-)
+# 添加源文件
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
+# 创建可执行文件
 add_executable(ldpc_constructor ${SOURCES})
-
-
-
-message(STATUS "Using hardcoded Eigen path: C:/msys64/mingw64/include/eigen3")

@@ -2,6 +2,7 @@
 #define MATRIX_UTILS_H
 
 #include <Eigen/Dense>
+#include <Eigen/Sparse> // [必须添加]
 #include <vector>
 #include <string>
 #include <utility>
@@ -26,4 +27,8 @@ void printAsHexLog(
     const std::string& name,
     const GF2p& gf,
     int P);
+
+// [必须添加] saveToALIST 的声明
+void saveToALIST(const Eigen::SparseMatrix<int>& mat, const std::string& filename);
+
 #endif // MATRIX_UTILS_H

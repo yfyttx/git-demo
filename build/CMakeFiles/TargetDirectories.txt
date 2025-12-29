@@ -1,3 +1,3 @@
-C:/Users/yfyttx/Documents/code/quantum computing/build/CMakeFiles/ldpc_constructor.dir
-C:/Users/yfyttx/Documents/code/quantum computing/build/CMakeFiles/edit_cache.dir
-C:/Users/yfyttx/Documents/code/quantum computing/build/CMakeFiles/rebuild_cache.dir
+/home/ypc/Projects/git-demo/build/CMakeFiles/ldpc_constructor.dir
+/home/ypc/Projects/git-demo/build/CMakeFiles/edit_cache.dir
+/home/ypc/Projects/git-demo/build/CMakeFiles/rebuild_cache.dir
