@@ -30,7 +30,8 @@ void ModelChannel_AWGN_256QAM_4D(code_t *code, decoder_t *decoder, int **NBIN, f
 void build_QAM_table(int logGF);
 void ModelChannel_BSC(code_t *code, decoder_t *decoder, table_t *table, int **NBIN, float p_error,
                       int *init_rand);
-
+void ModelChannel_BSC(code_t *code, decoder_t *decoder, table_t *table, int **NBIN, float p,
+                      int *Idum);
 /* //construction of pos_gf_to_bin
 FILE *opfile;
 opfile=fopen("./data/gf256_to_bin.txt","a");

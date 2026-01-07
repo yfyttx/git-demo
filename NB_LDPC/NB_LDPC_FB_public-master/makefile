@@ -27,4 +27,9 @@ obj/NB_LDPC.o: NB_LDPC.c include/syndrome_decoder.h include/bubble_decoder.h inc
 essai: obj/init.o obj/tools.o obj/channel.o obj/bubble_decoder.o obj/NB_LDPC.o
 	gcc -O3 -Wall -o essai obj/init.o obj/tools.o obj/channel.o obj/bubble_decoder.o obj/NB_LDPC.o -lm
 
+# ... (保留前面的所有内容) ...
+
+# 添加清理规则 (注意: rm 前面的缩进必须是一个 Tab 键，不能是空格!)
+clean:
+	rm -f obj/*.o essai
 #fin makefile
