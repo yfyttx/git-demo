@@ -1,7 +1,8 @@
 /*!
  * \file NB_LDPC.c
  * \brief Non-binary LDPC reduced complexity decoder with horizontal scheduling
- * \author C.Marchand, A. Al-Ghouwahel, Oussama Abassi, L. Conde-Canencia, A. abdmoulah, E. Boutillon
+ * \author C.Marchand, A. Al-Ghouwahel, Oussama Abassi, L. Conde-Canencia, A. abdmoulah, E.
+ * Boutillon
  * \copyright BSD copyright
  * \date 03/03/2015
  * \details
@@ -22,7 +23,8 @@
 #include "./include/NB_LDPC.h"
 
 // 声明外部函数
-void ModelChannel_BSC(code_t *code, decoder_t *decoder, table_t *table, int **NBIN, float p, int *Idum);
+void ModelChannel_BSC(code_t *code, decoder_t *decoder, table_t *table, int **NBIN, float p,
+                      int *Idum);
 
 /*!
  * \fn int main(int argc, char * argv[])
@@ -52,7 +54,8 @@ int main(int argc, char *argv[]) {
     /* Command line arguments */
     if (argc < 8) {
         printf("File:\n %s\n ", argv[0]);
-        // printf(usage_txt); // Commented out to avoid unused variable warning if header defines it static
+        // printf(usage_txt); // Commented out to avoid unused variable warning if header defines it
+        // static
         return (EXIT_FAILURE);
     }
     FileName = malloc(STR_MAXSIZE);
@@ -67,7 +70,7 @@ int main(int argc, char *argv[]) {
     decoder.n_cv = atoi(argv[6]);
     offset = atof(argv[7]);
     NbOper = atoi(argv[8]);
-    
+
     printf(" Monte-Carlo simulation of Non-Binary LDPC decoder \n\n");
     printf("Simulation parameters:\n");
     printf("\n\t NbMonteCarlo     : %d", NbMonteCarlo);
@@ -85,9 +88,12 @@ int main(int argc, char *argv[]) {
     LoadTables(&table, code.GF, code.logGF);
     printf("OK \n Allocate decoder ... ");
     AllocateDecoder(&code, &decoder);
-    printf("OK \n Gaussian Elimination ... ");
-    GaussianElimination(&code, &table);
-    printf(" OK \n");
+
+    // [修改 1] 注释掉高斯消元，避免因矩阵不满秩(Rank < M)导致报错退出
+    // printf("OK \n Gaussian Elimination ... ");
+    // GaussianElimination(&code, &table);
+    // printf(" OK \n");
+    printf("OK \n Gaussian Elimination ... SKIPPED (For Quantum/Redundant Codes) \n");
 
     // output results in a file
     FILE *opfile;
@@ -108,9 +114,11 @@ int main(int argc, char *argv[]) {
 
     /* Memory  allocation */
     NBIN = (int **)calloc(code.N, sizeof(int *));
-    for (n = 0; n < code.N; n++) NBIN[n] = (int *)calloc(code.logGF, sizeof(int));
+    for (n = 0; n < code.N; n++)
+        NBIN[n] = (int *)calloc(code.logGF, sizeof(int));
     KBIN = (int **)calloc(code.K, sizeof(int *));
-    for (k = 0; k < code.K; k++) KBIN[k] = (int *)calloc(code.logGF, sizeof(int));
+    for (k = 0; k < code.K; k++)
+        KBIN[k] = (int *)calloc(code.logGF, sizeof(int));
 
     NSYMB = (int *)calloc(code.N, sizeof(int));
     KSYMB = (int *)calloc(code.K, sizeof(int));
@@ -121,8 +129,10 @@ int main(int argc, char *argv[]) {
     int dc_min = 100;
     int dc_max = 0;
     for (node = 0; node < code.M; node++) {
-        if (dc_max < code.rowDegree[node]) dc_max = code.rowDegree[node];
-        if (dc_min > code.rowDegree[node]) dc_min = code.rowDegree[node];
+        if (dc_max < code.rowDegree[node])
+            dc_max = code.rowDegree[node];
+        if (dc_min > code.rowDegree[node])
+            dc_min = code.rowDegree[node];
     }
     if (dc_min != dc_max) {
         printf("d_c is not constant: dc_min= %d ; dc_max=%d !!!!!! \n", dc_min, dc_max);
@@ -135,15 +145,23 @@ int main(int argc, char *argv[]) {
 
     for (nb = 1; nb <= NbMonteCarlo; nb++) {
         /* Decoder re-initialization */
-        RandomBinaryGenerator(code.N, code.M, code.GF, code.logGF, KBIN, KSYMB, table.BINGF, &Idum);
-        Encoding(&code, &table, CodeWord, NBIN, KSYMB);
+
+        // [修改 2] 注释掉随机生成和编码，直接模拟全零码字传输
+        // RandomBinaryGenerator(code.N, code.M, code.GF, code.logGF, KBIN, KSYMB, table.BINGF,
+        // &Idum); Encoding(&code, &table, CodeWord, NBIN, KSYMB);
+
+        // 手动将码字设为全0 (All-Zero Codeword Assumption)
+        memset(CodeWord, 0, code.N * sizeof(int));
+        for (n = 0; n < code.N; n++) {
+            memset(NBIN[n], 0, code.logGF * sizeof(int));
+        }
 
         /* Noisy channel */
         // 自动判断信道类型：正数跑AWGN，负数跑BSC
         if (EbN > 0) {
             ModelChannel_AWGN_BPSK(&code, &decoder, &table, NBIN, EbN, &Idum);
         } else {
-            float p_error = -EbN; 
+            float p_error = -EbN;
             ModelChannel_BSC(&code, &decoder, &table, NBIN, p_error, &Idum);
         }
 
@@ -183,7 +201,8 @@ int main(int argc, char *argv[]) {
 
                     // Normalisation
                     for (g = 1; g < decoder.n_vc; g++) {
-                        decoder.M_VtoC_LLR[i][g] = decoder.M_VtoC_LLR[i][g] - decoder.M_VtoC_LLR[i][0];
+                        decoder.M_VtoC_LLR[i][g] =
+                            decoder.M_VtoC_LLR[i][g] - decoder.M_VtoC_LLR[i][0];
                     }
                     decoder.M_VtoC_LLR[i][0] = 0.0;
                 }
@@ -193,22 +212,26 @@ int main(int argc, char *argv[]) {
                 // compute SO
                 for (i = 0; i < code.rowDegree[node]; i++) {
                     for (k = 0; k < code.GF; k++) {
-                        decoder.APP[code.mat[node][i]][k] = decoder.M_CtoV_LLR[i][k] + Mvc_temp[i][k];
-                        decoder.VtoC[code.mat[node][i]][k] = decoder.M_CtoV_LLR[i][k] + decoder.intrinsic_LLR[code.mat[node][i]][k];
+                        decoder.APP[code.mat[node][i]][k] =
+                            decoder.M_CtoV_LLR[i][k] + Mvc_temp[i][k];
+                        decoder.VtoC[code.mat[node][i]][k] =
+                            decoder.M_CtoV_LLR[i][k] + decoder.intrinsic_LLR[code.mat[node][i]][k];
                     }
                 }
-            } 
+            }
 
             Decision(decide, decoder.APP, code.N, code.GF);
             synd = Syndrom(&code, decide, &table);
-            if (synd == 0) break;
+            if (synd == 0)
+                break;
         }
 
         sum_it = sum_it + iter + 1;
 
         /* Compute the Bit Error Rate (BER)*/
         nbErrors = 0;
-        for (k = 0; k < code.K; k++) {
+        // [修改 3] 循环上限改为 code.N (原为 code.K)，因为 K 为负数无法统计
+        for (k = 0; k < code.N; k++) {
             for (l = 0; l < code.logGF; l++)
                 if (table.BINGF[decide[k]][l] != NBIN[k][l])
                     nbErrors++;
@@ -217,21 +240,25 @@ int main(int argc, char *argv[]) {
         total_errors = total_errors + nbErrors;
         if (nbErrors != 0) {
             nbErroneousFrames++;
-            if (synd == 0) nbUndetectedErrors++;
+            if (synd == 0)
+                nbUndetectedErrors++;
         }
         if (nb % 10 == 0) {
+            // [修改 4] 修正 BER 计算分母为 code.N
             printf("\r<%d> FER= %d / %d = %f BER= %d / x = %f  avr_it=%.2f", nbUndetectedErrors,
                    nbErroneousFrames, nb, (double)(nbErroneousFrames) / nb, total_errors,
-                   (double)total_errors / (nb * code.K * code.logGF), (double)(sum_it) / nb);
+                   (double)total_errors / (nb * code.N * code.logGF), (double)(sum_it) / nb);
             fflush(stdout);
         }
 
-        if (nbErroneousFrames == 40) break;
+        if (nbErroneousFrames == 40)
+            break;
     }
 
+    // [修改 4] 修正 BER 计算分母为 code.N
     printf("\r<%d> FER= %d / %d = %f BER= %d / x = %f  avr_it=%.2f", nbUndetectedErrors,
            nbErroneousFrames, nb, (double)(nbErroneousFrames) / nb, total_errors,
-           (double)total_errors / (nb * code.K * code.logGF), (double)(sum_it) / nb);
+           (double)total_errors / (nb * code.N * code.logGF), (double)(sum_it) / nb);
 
     printf(" \n results are printed in file %s \n", file_name);
 
@@ -239,13 +266,16 @@ int main(int argc, char *argv[]) {
     c_time_string = ctime(&end_time);
     exec_time = difftime(end_time, start_time);
     opfile = fopen(file_name, "a");
-    
+
     if ((opfile) == NULL) {
         printf(" \n !! file not found \n ");
     } else {
-        fprintf(opfile, " SNR:%.2f: \t FER= %d / %d = %f ", EbN, nbErroneousFrames, nb, (double)(nbErroneousFrames) / nb);
+        // [修改 4] 修正文件输出中的 BER 计算分母为 code.N
+        fprintf(opfile, " SNR:%.2f: \t FER= %d / %d = %f ", EbN, nbErroneousFrames, nb,
+                (double)(nbErroneousFrames) / nb);
         fprintf(opfile, " \t BER= %d / x = \t %f  avr_it= \t %.2f \t time: %s", total_errors,
-                (double)total_errors / (double)(nb * code.K * code.logGF), (double)(sum_it) / nb, c_time_string);
+                (double)total_errors / (double)(nb * code.N * code.logGF), (double)(sum_it) / nb,
+                c_time_string);
     }
     fclose(opfile);
     printf(" \n results printed \n ");
@@ -261,9 +291,11 @@ int main(int argc, char *argv[]) {
     free(KSYMB);
     free(NSYMB);
 
-    for (n = 0; n < code.N; n++) free(NBIN[n]);
+    for (n = 0; n < code.N; n++)
+        free(NBIN[n]);
     free(NBIN);
-    for (k = 0; k < code.K; k++) free(KBIN[k]);
+    for (k = 0; k < code.K; k++)
+        free(KBIN[k]);
     free(KBIN);
 
     FreeCode(&code);

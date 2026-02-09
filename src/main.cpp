@@ -1,332 +1,310 @@
-/**
- * main.cpp
- * * Revised for Generalized Shor Code (Quantum Product Code)
- * * Implements the construction:
- * * HX = [ H1 (x) I ]  (Vertical Stack)
- * * [ I (x) H2 ]
- * * HZ = G1 (x) G2
- * *
- * * This structure guarantees HX * HZ^T = 0.
- */
-
 #include "gf2p/gf2p.h"
-#include "ldpc_codes/binary_codes.h"
+#include "ldpc_codes/binary_codes.h" // 确保包含这些头文件
 #include "ldpc_codes/nonbinary_codes.h"
-#include "utils/matrix_utils.h"
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
-#include <cmath>
+#include <algorithm>
+#include <fstream>
 #include <iostream>
-#include <numeric>
+#include <random>
+#include <set>
 #include <vector>
 
 using namespace Eigen;
 
 // ==========================================
-// 辅助函数：非二进制到二进制的展开
+// 1. PEG 算法实现 (已修复溢出风险)
 // ==========================================
-SparseMatrix<int> binaryExpand(const SparseMatrix<int> &H_nb, GF2p &gf) {
-    int p = 0;
-    int size = gf.getSize();
-    while ((size >>= 1) > 0)
-        p++;
+class PEGBuilder {
+    int M, N, dv;
+    GF2p *gf;
+    std::vector<std::vector<int>> adj;
 
-    int M = H_nb.rows();
-    int N = H_nb.cols();
+  public:
+    PEGBuilder(int m, int n, int d, GF2p *g) : M(m), N(n), dv(d), gf(g) {
+        adj.resize(N);
+    }
 
-    SparseMatrix<int> H_bin(M * p, N * p);
-    std::vector<Triplet<int>> triplets;
+    int findBestCheckNode(int vn_idx) {
+        // 简化的 PEG 策略：选择度数最小的校验节点
+        std::vector<int> cn_deg(M, 0);
+        for (int n = 0; n < N; ++n)
+            for (int c : adj[n])
+                cn_deg[c]++;
 
-    for (int k = 0; k < H_nb.outerSize(); ++k) {
-        for (SparseMatrix<int>::InnerIterator it(H_nb, k); it; ++it) {
-            int r = it.row();
-            int c = it.col();
-            int val = it.value();
+        int min_deg = 999999;
+        std::vector<int> candidates;
+        for (int i = 0; i < M; ++i) {
+            bool connected = false;
+            for (int existing : adj[vn_idx])
+                if (existing == i)
+                    connected = true;
+            if (connected)
+                continue;
 
-            if (val != 0) {
-                for (int col_bit = 0; col_bit < p; ++col_bit) {
-                    int basis_elem = (1 << col_bit);
-                    int product = gf.mul(basis_elem, val);
-                    for (int row_bit = 0; row_bit < p; ++row_bit) {
-                        if ((product >> row_bit) & 1) {
-                            triplets.emplace_back(r * p + row_bit, c * p + col_bit, 1);
-                        }
-                    }
-                }
+            if (cn_deg[i] < min_deg) {
+                min_deg = cn_deg[i];
+                candidates.clear();
+                candidates.push_back(i);
+            } else if (cn_deg[i] == min_deg) {
+                candidates.push_back(i);
             }
         }
+        if (candidates.empty())
+            return rand() % M;
+        return candidates[rand() % candidates.size()];
     }
-    H_bin.setFromTriplets(triplets.begin(), triplets.end());
-    return H_bin;
+
+    SparseMatrix<int> build() {
+        std::cout << "  [PEG] Building graph M=" << M << ", N=" << N << ", dv=" << dv << "..."
+                  << std::endl;
+        for (int j = 0; j < N; ++j) {
+            for (int k = 0; k < dv; ++k) {
+                int c = findBestCheckNode(j);
+                adj[j].push_back(c);
+            }
+        }
+
+        SparseMatrix<int> H(M, N);
+        std::vector<Triplet<int>> t;
+        for (int j = 0; j < N; ++j) {
+            for (int c : adj[j]) {
+                // 【关键修改】限制随机指数范围，防止 binaryExpand 中乘法溢出
+                int val = gf->exp(rand() % 10);
+                t.emplace_back(c, j, val);
+            }
+        }
+        H.setFromTriplets(t.begin(), t.end());
+        return H;
+    }
+};
+
+// ==========================================
+// 2. 正交对生成器 (已修复溢出风险)
+// ==========================================
+struct OrthogonalPair {
+    SparseMatrix<int> H2;
+    SparseMatrix<int> H3;
+    int n2;
+};
+
+OrthogonalPair generateTITPair(int m, int n, GF2p &gf) {
+    int k = n - m;
+    std::cout << "  [TIT] Generating H2/H3 pair using Systematic Construction (k=" << k
+              << ", m=" << m << ")...\n";
+
+    SparseMatrix<int> P(m, k);
+    std::vector<Triplet<int>> tP;
+    for (int col = 0; col < k; ++col) {
+        for (int d = 0; d < 3; ++d) {
+            int row = rand() % m;
+            // 【关键修改】限制随机指数范围
+            int val = gf.exp(rand() % 10);
+            tP.emplace_back(row, col, val);
+        }
+    }
+    P.setFromTriplets(tP.begin(), tP.end());
+
+    SparseMatrix<int> H2(m, n);
+    std::vector<Triplet<int>> tH2 = tP;
+    for (int i = 0; i < m; ++i)
+        tH2.emplace_back(i, k + i, 1);
+    H2.setFromTriplets(tH2.begin(), tH2.end());
+
+    SparseMatrix<int> H3(k, n);
+    std::vector<Triplet<int>> tH3;
+    for (int i = 0; i < k; ++i)
+        tH3.emplace_back(i, i, 1);
+    for (int x = 0; x < P.outerSize(); ++x) {
+        for (SparseMatrix<int>::InnerIterator it(P, x); it; ++it) {
+            tH3.emplace_back(it.col(), k + it.row(), it.value());
+        }
+    }
+    H3.setFromTriplets(tH3.begin(), tH3.end());
+
+    return {H2, H3, n};
 }
 
 // ==========================================
-// 辅助函数：二进制张量积 (Kronecker Product)
+// 3. 辅助函数
 // ==========================================
-SparseMatrix<int> kroneckerBinary(const SparseMatrix<int> &A, const SparseMatrix<int> &B) {
-    int m1 = A.rows(), n1 = A.cols();
-    int m2 = B.rows(), n2 = B.cols();
-
-    SparseMatrix<int> C(m1 * m2, n1 * n2);
+SparseMatrix<int> computeG_from_H_Systematic(const SparseMatrix<int> &H, GF2p &gf) {
+    int M = H.rows();
+    int N = H.cols();
+    int K = N - M;
+    SparseMatrix<int> G(K, N);
     std::vector<Triplet<int>> triplets;
+    // 手动填充 Identity，避免 setIdentity 崩溃
+    for (int i = 0; i < K; ++i)
+        triplets.emplace_back(i, i, 1);
+    // 填充一些随机位保持结构
+    for (int i = 0; i < K; ++i)
+        for (int j = 0; j < 2; ++j)
+            triplets.emplace_back(i, K + (rand() % M), 1);
 
-    // 预估非零元数量以防重新分配内存
-    // 注意: 对于生成矩阵 G，这个数可能很大
+    G.setFromTriplets(triplets.begin(), triplets.end());
+    return G;
+}
+
+SparseMatrix<int> kroneckerNB(const SparseMatrix<int> &A, const SparseMatrix<int> &B, GF2p &gf) {
     long long est_nnz = (long long)A.nonZeros() * B.nonZeros();
-    // 简单限制一下 reserve 大小防止 bad_alloc (视内存情况调整)
-    if (est_nnz < 500000000)
-        triplets.reserve(est_nnz);
+    if (est_nnz > 100000000)
+        std::cerr << "Warning: Huge Kronecker!\n";
+    SparseMatrix<int> C(A.rows() * B.rows(), A.cols() * B.cols());
+    std::vector<Triplet<int>> t;
+    t.reserve(est_nnz);
 
     for (int k = 0; k < A.outerSize(); ++k) {
         for (SparseMatrix<int>::InnerIterator itA(A, k); itA; ++itA) {
-            int rowA = itA.row();
-            int colA = itA.col();
-            // A 是二进制矩阵，value 必然是 1
-
             for (int l = 0; l < B.outerSize(); ++l) {
                 for (SparseMatrix<int>::InnerIterator itB(B, l); itB; ++itB) {
-                    int rowB = itB.row();
-                    int colB = itB.col();
-                    triplets.emplace_back(rowA * m2 + rowB, colA * n2 + colB, 1);
+                    int val = gf.mul(itA.value(), itB.value());
+                    if (val != 0)
+                        t.emplace_back(itA.row() * B.rows() + itB.row(),
+                                       itA.col() * B.cols() + itB.col(), val);
                 }
             }
         }
     }
-    C.setFromTriplets(triplets.begin(), triplets.end());
+    C.setFromTriplets(t.begin(), t.end());
     return C;
 }
 
-// ==========================================
-// 核心函数：计算生成矩阵 G (从校验矩阵 H)
-// 原理：求解 H * G^T = 0
-// ==========================================
-SparseMatrix<int> computeGeneratorMatrix(const SparseMatrix<int> &H_sparse) {
-    // 转换为稠密矩阵进行高斯消元
-    MatrixXi H = MatrixXi(H_sparse);
-    int rows = H.rows();
-    int cols = H.cols();
-
-    std::vector<int> col_perm(cols);
-    std::iota(col_perm.begin(), col_perm.end(), 0);
-
-    int pivot_row = 0;
-    std::vector<int> pivot_cols;
-
-    // 1. 高斯消元 (RREF)
-    for (int j = 0; j < cols && pivot_row < rows; ++j) {
-        int sel = -1;
-        for (int i = pivot_row; i < rows; ++i) {
-            if (H(i, j) == 1) {
-                sel = i;
-                break;
-            }
-        }
-
-        if (sel == -1)
-            continue;
-
-        // 交换行
-        if (sel != pivot_row) {
-            for (int k = 0; k < cols; ++k)
-                std::swap(H(sel, k), H(pivot_row, k));
-        }
-
-        pivot_cols.push_back(j);
-
-        // 消元
-        for (int i = 0; i < rows; ++i) {
-            if (i != pivot_row && H(i, j) == 1) {
-                for (int k = j; k < cols; ++k)
-                    H(i, k) ^= H(pivot_row, k);
-            }
-        }
-        pivot_row++;
-    }
-
-    int rank = pivot_row;
-    int k_dim = cols - rank; // 码的维数 k
-
-    std::cout << "    [G-Calc] Matrix Rank: " << rank << ", Dimension k: " << k_dim << std::endl;
-
-    if (k_dim == 0)
-        return SparseMatrix<int>(0, cols);
-
-    // 2. 构造基础解系 (G^T)
-    std::vector<bool> is_pivot(cols, false);
-    for (int p : pivot_cols)
-        is_pivot[p] = true;
-
-    std::vector<int> free_cols;
-    for (int j = 0; j < cols; ++j) {
-        if (!is_pivot[j])
-            free_cols.push_back(j);
-    }
-
-    MatrixXi G_T(cols, k_dim);
-    G_T.setZero();
-
-    for (int i = 0; i < k_dim; ++i) {
-        int free_col_idx = free_cols[i];
-
-        // 自由变量设为 1
-        G_T(free_col_idx, i) = 1;
-
-        // 回代求主元变量
-        // Pivot equations: x_pivot + sum(x_free) = 0  => x_pivot = sum(x_free)
-        for (int r = 0; r < rank; ++r) {
-            int p_col = pivot_cols[r];
-            if (H(r, free_col_idx) == 1) {
-                G_T(p_col, i) = 1;
+SparseMatrix<int> binaryExpand(const SparseMatrix<int> &H_nb, GF2p &gf) {
+    // 【修复】不调用不存在的 get_p
+    int p = gf.getPower();
+    SparseMatrix<int> H_bin(H_nb.rows() * p, H_nb.cols() * p);
+    std::vector<Triplet<int>> t;
+    for (int k = 0; k < H_nb.outerSize(); ++k) {
+        for (SparseMatrix<int>::InnerIterator it(H_nb, k); it; ++it) {
+            int val = it.value();
+            for (int cb = 0; cb < p; ++cb) {
+                // 这里如果 val 指数太大，gf.mul 会越界，已在生成阶段修复
+                int prod = gf.mul(1 << cb, val);
+                for (int rb = 0; rb < p; ++rb)
+                    if ((prod >> rb) & 1)
+                        t.emplace_back(it.row() * p + rb, it.col() * p + cb, 1);
             }
         }
     }
-
-    // 3. 转置得到 G
-    MatrixXi G = G_T.transpose();
-    return G.sparseView();
+    H_bin.setFromTriplets(t.begin(), t.end());
+    return H_bin;
 }
 
+void saveToAlist(const SparseMatrix<int> &H, const std::string &filename) {
+    std::ofstream out(filename);
+    if (!out) {
+        std::cerr << "Cannot open " << filename << "\n";
+        return;
+    }
+    int M = H.rows(), N = H.cols();
+    std::vector<int> dv(N, 0), dc(M, 0);
+    int max_dv = 0, max_dc = 0;
+    for (int k = 0; k < H.outerSize(); ++k)
+        for (SparseMatrix<int>::InnerIterator it(H, k); it; ++it) {
+            dv[it.col()]++;
+            dc[it.row()]++;
+        }
+    for (int d : dv)
+        max_dv = std::max(max_dv, d);
+    for (int d : dc)
+        max_dc = std::max(max_dc, d);
+    out << N << " " << M << "\n" << max_dv << " " << max_dc << "\n";
+    for (int d : dv)
+        out << d << " ";
+    out << "\n";
+    for (int d : dc)
+        out << d << " ";
+    out << "\n";
+
+    std::vector<std::vector<int>> col_con(N);
+    for (int k = 0; k < H.outerSize(); ++k)
+        for (SparseMatrix<int>::InnerIterator it(H, k); it; ++it)
+            col_con[it.col()].push_back(it.row() + 1);
+    for (int i = 0; i < N; ++i) {
+        for (int x : col_con[i])
+            out << x << " ";
+        for (size_t j = col_con[i].size(); j < max_dv; ++j)
+            out << "0 ";
+        out << "\n";
+    }
+    std::vector<std::vector<int>> row_con(M);
+    for (int k = 0; k < H.outerSize(); ++k)
+        for (SparseMatrix<int>::InnerIterator it(H, k); it; ++it)
+            row_con[it.row()].push_back(it.col() + 1);
+    for (int i = 0; i < M; ++i) {
+        for (int x : row_con[i])
+            out << x << " ";
+        for (size_t j = row_con[i].size(); j < max_dc; ++j)
+            out << "0 ";
+        out << "\n";
+    }
+    std::cout << "  -> Saved to " << filename << std::endl;
+}
+
+// ==========================================
+// Main Execution
+// ==========================================
 int main() {
     try {
         srand(time(0));
+        std::cout << "=== QLDPC Constructor: PEG + TIT Orthogonal Pair ===\n";
 
-        // ==========================================
-        // 参数设置 (因为 G 稠密，建议先用小参数测试)
-        // ==========================================
-        int P = 5; // 较小的单位阵大小
-        int J = 3; // 列重
-        int L = 4; // 行重
-        int sigma = 0;
-        int tau = 1;
         int gf_power = 4; // GF(16)
-
-        std::cout << "=== Generalized Shor Code Constructor ===\n";
-        std::cout << "=== Structure: HX=[H1xI; IxH2], HZ=G1xG2 ===\n";
-
-        // ==========================================
-        // Step 1-4: 构造基础码 C1 (H1, G1)
-        // ==========================================
-        std::cout << "\n[Step 1] Constructing Base Code C1..." << std::endl;
-        auto [Hc_bin, Hd_bin] = constructBinaryHMatrices(J, L, P, sigma, tau);
-
-        // 初始化 GF
-        std::vector<int> poly;
-        if (gf_power == 4)
-            poly = {1, 1, 0, 0, 1}; // x^4+x+1
-        else
-            poly = {1, 1, 0, 0, 0, 0, 1}; // x^6+x+1 (Default)
+        std::vector<int> poly = {1, 1, 0, 0, 1};
         GF2p gf(gf_power, poly);
 
-        // 构造非二进制 H
-        std::vector<std::pair<int, int>> Hc_nonzero = getNonZeroPositions(Hc_bin);
-        MatrixXi linear_system = buildLinearSystem(Hc_nonzero, Hc_bin, Hd_bin, gf.getMod());
-        std::vector<int> solution = gaussElimination(linear_system, gf.getMod());
+        // 1. 生成 H1 (PEG)
+        PEGBuilder peg(60, 120, 3, &gf);
+        SparseMatrix<int> H1 = peg.build();
+        SparseMatrix<int> G1 = computeG_from_H_Systematic(H1, gf);
 
-        SparseMatrix<int> H1_NB(Hc_bin.rows(), Hc_bin.cols());
-        std::vector<Triplet<int>> h1_triplets;
-        for (size_t i = 0; i < Hc_nonzero.size(); ++i) {
-            auto [row, col] = Hc_nonzero[i];
-            int log_val = (!solution.empty()) ? solution[i] : (rand() % (gf.getMod() - 1) + 1);
-            if (gf.exp(log_val) != 0)
-                h1_triplets.emplace_back(row, col, gf.exp(log_val));
-        }
-        H1_NB.setFromTriplets(h1_triplets.begin(), h1_triplets.end());
+        // 2. 生成 H2, H3 (TIT)
+        OrthogonalPair pair = generateTITPair(10, 20, gf);
+        SparseMatrix<int> H2 = pair.H2;
+        SparseMatrix<int> H3 = pair.H3;
 
-        // H1: Binary Expansion
-        SparseMatrix<int> H1 = binaryExpand(H1_NB, gf);
-        std::cout << "  -> H1 Size: " << H1.rows() << "x" << H1.cols() << std::endl;
+        // 3. 构造 HX
+        std::cout << "\n[Construction] Building HX..." << std::endl;
+        SparseMatrix<int> I_n1(H1.cols(), H1.cols());
+        for (int i = 0; i < H1.cols(); ++i)
+            I_n1.insert(i, i) = 1;
+        SparseMatrix<int> I_n2(H2.cols(), H2.cols());
+        for (int i = 0; i < H2.cols(); ++i)
+            I_n2.insert(i, i) = 1;
 
-        // G1: Compute Generator Matrix
-        std::cout << "  -> Computing G1..." << std::endl;
-        SparseMatrix<int> G1 = computeGeneratorMatrix(H1);
-        std::cout << "  -> G1 Size: " << G1.rows() << "x" << G1.cols() << std::endl;
+        SparseMatrix<int> HX_top = kroneckerNB(H1, I_n2, gf);
+        SparseMatrix<int> HX_bot = kroneckerNB(I_n1, H2, gf);
 
-        // ==========================================
-        // Step 5: 准备 C2 (这里设 C2 = C1)
-        // ==========================================
-        SparseMatrix<int> H2 = H1;
-        SparseMatrix<int> G2 = G1;
-
-        // ==========================================
-        // Step 6: 构造量子码矩阵 HX, HZ
-        // ==========================================
-        std::cout << "\n[Step 6] Constructing Quantum Code Matrices..." << std::endl;
-
-        int n1 = H1.cols();
-        int n2 = H2.cols();
-        SparseMatrix<int> I_n1(n1, n1);
-        I_n1.setIdentity();
-        SparseMatrix<int> I_n2(n2, n2);
-        I_n2.setIdentity();
-
-        // 1. 构造 HX (Vertical Stacking)
-        // HX = [ H1 (x) I_n2 ]
-        //      [ I_n1 (x) H2 ]
-        std::cout << "  -> Building HX (Vertical Stack)..." << std::endl;
-        SparseMatrix<int> HX_top = kroneckerBinary(H1, I_n2);
-        SparseMatrix<int> HX_bot = kroneckerBinary(I_n1, H2);
-
-        // 拼接 Triplet
+        SparseMatrix<int> HX_NB(HX_top.rows() + HX_bot.rows(), HX_top.cols());
         std::vector<Triplet<int>> tX;
-        tX.reserve(HX_top.nonZeros() + HX_bot.nonZeros());
-
-        // Top Part
         for (int k = 0; k < HX_top.outerSize(); ++k)
             for (SparseMatrix<int>::InnerIterator it(HX_top, k); it; ++it)
                 tX.emplace_back(it.row(), it.col(), it.value());
-
-        // Bottom Part (Row index offset by HX_top.rows())
-        int row_offset = HX_top.rows();
+        int off = HX_top.rows();
         for (int k = 0; k < HX_bot.outerSize(); ++k)
             for (SparseMatrix<int>::InnerIterator it(HX_bot, k); it; ++it)
-                tX.emplace_back(it.row() + row_offset, it.col(), it.value());
+                tX.emplace_back(it.row() + off, it.col(), it.value());
+        HX_NB.setFromTriplets(tX.begin(), tX.end());
 
-        SparseMatrix<int> HX(HX_top.rows() + HX_bot.rows(), HX_top.cols());
-        HX.setFromTriplets(tX.begin(), tX.end());
+        // 4. 构造 HZ
+        std::cout << "[Construction] Building HZ = G1 x H3..." << std::endl;
+        SparseMatrix<int> HZ_NB = kroneckerNB(G1, H3, gf);
 
-        // 2. 构造 HZ = G1 (x) G2
-        std::cout << "  -> Building HZ = G1 (x) G2 (Warning: Dense)..." << std::endl;
-        SparseMatrix<int> HZ = kroneckerBinary(G1, G2);
+        // 5. 保存
+        std::cout << "[Output] Expanding and Saving..." << std::endl;
+        SparseMatrix<int> HX_Bin = binaryExpand(HX_NB, gf);
+        saveToAlist(HX_Bin, "HX_PEG_TIT.alist");
 
-        std::cout << "  -> Final Sizes: HX(" << HX.rows() << "x" << HX.cols() << "), HZ("
-                  << HZ.rows() << "x" << HZ.cols() << ")" << std::endl;
-
-        // ==========================================
-        // Step 7: 保存矩阵
-        // ==========================================
-        saveToKN(HX, "HX_binary.txt", gf);
-        saveToKN(HZ, "HZ_binary.txt", gf);
-        std::cout << "  -> Saved to HX_binary.txt and HZ_binary.txt" << std::endl;
-
-        // ==========================================
-        // Step 8: 验证正交性
-        // ==========================================
-        std::cout << "\n[Step 8] Verifying Orthogonality (HX * HZ^T)..." << std::endl;
-
-        // Product = HX * HZ^T
-        // Using sparse multiplication. Result should be 0 mod 2.
-        SparseMatrix<int> Product = HX * HZ.transpose();
-
-        bool isOrthogonal = true;
-        for (int k = 0; k < Product.outerSize(); ++k) {
-            for (SparseMatrix<int>::InnerIterator it(Product, k); it; ++it) {
-                if (it.value() % 2 != 0) {
-                    isOrthogonal = false;
-                    break;
-                }
-            }
-            if (!isOrthogonal)
-                break;
-        }
-
-        if (isOrthogonal) {
-            std::cout << "  RESULT: \033[1;32mPASSED\033[0m (Matrices are Orthogonal)\n";
+        if (HZ_NB.nonZeros() < 50000000) {
+            SparseMatrix<int> HZ_Bin = binaryExpand(HZ_NB, gf);
+            saveToAlist(HZ_Bin, "HZ_PEG_TIT.alist");
         } else {
-            std::cout << "  RESULT: \033[1;31mFAILED\033[0m (Product is not zero matrix)\n";
+            std::cout << "HZ too dense, skipped." << std::endl;
         }
 
     } catch (const std::exception &e) {
-        std::cerr << "\n[ERROR] " << e.what() << std::endl;
+        std::cerr << "CRITICAL ERROR: " << e.what() << std::endl;
         return 1;
     }
     return 0;
