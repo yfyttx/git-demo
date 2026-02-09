@@ -129,6 +129,78 @@ ldpc_constructor/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/build
 .PHONY : ldpc_constructor/fast
 
+peg-unige/BigGirth.o: peg-unige/BigGirth.C.o
+.PHONY : peg-unige/BigGirth.o
+
+# target to build an object file
+peg-unige/BigGirth.C.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o
+.PHONY : peg-unige/BigGirth.C.o
+
+peg-unige/BigGirth.i: peg-unige/BigGirth.C.i
+.PHONY : peg-unige/BigGirth.i
+
+# target to preprocess a source file
+peg-unige/BigGirth.C.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.i
+.PHONY : peg-unige/BigGirth.C.i
+
+peg-unige/BigGirth.s: peg-unige/BigGirth.C.s
+.PHONY : peg-unige/BigGirth.s
+
+# target to generate assembly for a file
+peg-unige/BigGirth.C.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.s
+.PHONY : peg-unige/BigGirth.C.s
+
+peg-unige/CyclesOfGraph.o: peg-unige/CyclesOfGraph.C.o
+.PHONY : peg-unige/CyclesOfGraph.o
+
+# target to build an object file
+peg-unige/CyclesOfGraph.C.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o
+.PHONY : peg-unige/CyclesOfGraph.C.o
+
+peg-unige/CyclesOfGraph.i: peg-unige/CyclesOfGraph.C.i
+.PHONY : peg-unige/CyclesOfGraph.i
+
+# target to preprocess a source file
+peg-unige/CyclesOfGraph.C.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.i
+.PHONY : peg-unige/CyclesOfGraph.C.i
+
+peg-unige/CyclesOfGraph.s: peg-unige/CyclesOfGraph.C.s
+.PHONY : peg-unige/CyclesOfGraph.s
+
+# target to generate assembly for a file
+peg-unige/CyclesOfGraph.C.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.s
+.PHONY : peg-unige/CyclesOfGraph.C.s
+
+peg-unige/Random.o: peg-unige/Random.C.o
+.PHONY : peg-unige/Random.o
+
+# target to build an object file
+peg-unige/Random.C.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o
+.PHONY : peg-unige/Random.C.o
+
+peg-unige/Random.i: peg-unige/Random.C.i
+.PHONY : peg-unige/Random.i
+
+# target to preprocess a source file
+peg-unige/Random.C.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.i
+.PHONY : peg-unige/Random.C.i
+
+peg-unige/Random.s: peg-unige/Random.C.s
+.PHONY : peg-unige/Random.s
+
+# target to generate assembly for a file
+peg-unige/Random.C.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.s
+.PHONY : peg-unige/Random.C.s
+
 src/gf2p/gf2p.o: src/gf2p/gf2p.cpp.o
 .PHONY : src/gf2p/gf2p.o
 
@@ -258,6 +330,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ldpc_constructor"
+	@echo "... peg-unige/BigGirth.o"
+	@echo "... peg-unige/BigGirth.i"
+	@echo "... peg-unige/BigGirth.s"
+	@echo "... peg-unige/CyclesOfGraph.o"
+	@echo "... peg-unige/CyclesOfGraph.i"
+	@echo "... peg-unige/CyclesOfGraph.s"
+	@echo "... peg-unige/Random.o"
+	@echo "... peg-unige/Random.i"
+	@echo "... peg-unige/Random.s"
 	@echo "... src/gf2p/gf2p.o"
 	@echo "... src/gf2p/gf2p.i"
 	@echo "... src/gf2p/gf2p.s"

@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/usr/include/eigen3 -I/home/ypc/Projects/git-demo/include
+CXX_INCLUDES = -I/home/ypc/Projects/git-demo/include -I/home/ypc/Projects/git-demo/peg-unige -isystem /usr/include/eigen3
 
-CXX_FLAGS = -std=gnu++17
+CXX_FLAGS = -std=gnu++17 -O3 -Wall
 

@@ -81,12 +81,12 @@ clean: CMakeFiles/ldpc_constructor.dir/clean
 CMakeFiles/ldpc_constructor.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target ldpc_constructor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9 "Built target ldpc_constructor"
 .PHONY : CMakeFiles/ldpc_constructor.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ldpc_constructor.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ypc/Projects/git-demo/build/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ypc/Projects/git-demo/build/CMakeFiles 9
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/ldpc_constructor.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ypc/Projects/git-demo/build/CMakeFiles 0
 .PHONY : CMakeFiles/ldpc_constructor.dir/rule
