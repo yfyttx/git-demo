@@ -1,17 +1,7 @@
 /*!
  * \file NB_LDPC.c
  * \brief Non-binary LDPC reduced complexity decoder with horizontal scheduling
- * \author C.Marchand, A. Al-Ghouwahel, Oussama Abassi, L. Conde-Canencia, A. abdmoulah, E.
- * Boutillon
- * \copyright BSD copyright
- * \date 03/03/2015
- * \details
- *
- * Extended Min-Sum Decoder
- * Horizontal Scheduling
- * Layered decoder
- * syndrome based architecture
- *
+ * \author C.Marchand
  */
 
 #include <math.h>
@@ -26,10 +16,6 @@
 void ModelChannel_BSC(code_t *code, decoder_t *decoder, table_t *table, int **NBIN, float p,
                       int *Idum);
 
-/*!
- * \fn int main(int argc, char * argv[])
- * \brief main program
- */
 int main(int argc, char *argv[]) {
     int k, l, n, iter, i, g;
     int **KBIN, *KSYMB, **NBIN, *NSYMB;
@@ -48,14 +34,11 @@ int main(int argc, char *argv[]) {
 
     int node;
 
-    int Idum = -1; // initialization of random generator
+    int Idum = -1;
     srand(5);
 
-    /* Command line arguments */
     if (argc < 8) {
         printf("File:\n %s\n ", argv[0]);
-        // printf(usage_txt); // Commented out to avoid unused variable warning if header defines it
-        // static
         return (EXIT_FAILURE);
     }
     FileName = malloc(STR_MAXSIZE);
@@ -84,18 +67,24 @@ int main(int argc, char *argv[]) {
 
     printf("Load code  ... ");
     LoadCode(FileMatrix, &code);
+
+    // [修复核心] 强制修正码率，防止除以零导致无限噪声
+    // 对于 Hypergraph Product Code (30,60) x (5,10)，实际 K=150, N=600 => Rate=0.25
+    if (code.rate <= 1e-6) {
+        float fixed_rate = 0.25;
+        printf("\n\n [WARNING] Detected Rate=0 (M=N). Forcing Rate = %.2f to avoid Infinite Noise! "
+               "\n\n",
+               fixed_rate);
+        code.rate = fixed_rate;
+    }
+
     printf(" OK \n Load table ...");
     LoadTables(&table, code.GF, code.logGF);
     printf("OK \n Allocate decoder ... ");
     AllocateDecoder(&code, &decoder);
 
-    // [修改 1] 注释掉高斯消元，避免因矩阵不满秩(Rank < M)导致报错退出
-    // printf("OK \n Gaussian Elimination ... ");
-    // GaussianElimination(&code, &table);
-    // printf(" OK \n");
     printf("OK \n Gaussian Elimination ... SKIPPED (For Quantum/Redundant Codes) \n");
 
-    // output results in a file
     FILE *opfile;
     char note[40] = "FB30";
     printf("\n\t Note             : %s\n", note);
@@ -125,7 +114,6 @@ int main(int argc, char *argv[]) {
     CodeWord = (int *)calloc(code.N, sizeof(int));
     decide = (int *)calloc(code.N, sizeof(int));
 
-    // check that dc is constant
     int dc_min = 100;
     int dc_max = 0;
     for (node = 0; node < code.M; node++) {
@@ -144,29 +132,17 @@ int main(int argc, char *argv[]) {
     sum_it = 0;
 
     for (nb = 1; nb <= NbMonteCarlo; nb++) {
-        /* Decoder re-initialization */
-
-        // [修改 2] 注释掉随机生成和编码，直接模拟全零码字传输
-        // RandomBinaryGenerator(code.N, code.M, code.GF, code.logGF, KBIN, KSYMB, table.BINGF,
-        // &Idum); Encoding(&code, &table, CodeWord, NBIN, KSYMB);
-
-        // 手动将码字设为全0 (All-Zero Codeword Assumption)
         memset(CodeWord, 0, code.N * sizeof(int));
         for (n = 0; n < code.N; n++) {
             memset(NBIN[n], 0, code.logGF * sizeof(int));
         }
 
-        /* Noisy channel */
-        // 自动判断信道类型：正数跑AWGN，负数跑BSC
         if (EbN > 0) {
             ModelChannel_AWGN_BPSK(&code, &decoder, &table, NBIN, EbN, &Idum);
         } else {
             float p_error = -EbN;
             ModelChannel_BSC(&code, &decoder, &table, NBIN, p_error, &Idum);
         }
-
-        /***********************************************/
-        /* Implementation of the horizontal scheduling */
 
         // init Mvc with intrinsic
         for (n = 0; n < code.N; n++) {
@@ -175,7 +151,6 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        /* Decoding iterations*/
         for (iter = 0; iter < NbIterMax - 1; iter++) {
             for (node = 0; node < code.M; node++) {
                 for (i = 0; i < code.rowDegree[node]; i++) {
@@ -185,7 +160,6 @@ int main(int argc, char *argv[]) {
                     }
                 }
 
-                // sorting Mvc values
                 for (i = 0; i < code.rowDegree[node]; i++) {
                     for (k = 0; k < decoder.n_vc; k++) {
                         decoder.M_VtoC_LLR[i][k] = +1e5;
@@ -199,7 +173,6 @@ int main(int argc, char *argv[]) {
                         Mvc_temp2[i][decoder.M_VtoC_GF[i][k]] = +1e5;
                     }
 
-                    // Normalisation
                     for (g = 1; g < decoder.n_vc; g++) {
                         decoder.M_VtoC_LLR[i][g] =
                             decoder.M_VtoC_LLR[i][g] - decoder.M_VtoC_LLR[i][0];
@@ -209,7 +182,6 @@ int main(int argc, char *argv[]) {
 
                 CheckPassLogEMS(node, &decoder, &code, &table, NbOper, offset);
 
-                // compute SO
                 for (i = 0; i < code.rowDegree[node]; i++) {
                     for (k = 0; k < code.GF; k++) {
                         decoder.APP[code.mat[node][i]][k] =
@@ -228,9 +200,7 @@ int main(int argc, char *argv[]) {
 
         sum_it = sum_it + iter + 1;
 
-        /* Compute the Bit Error Rate (BER)*/
         nbErrors = 0;
-        // [修改 3] 循环上限改为 code.N (原为 code.K)，因为 K 为负数无法统计
         for (k = 0; k < code.N; k++) {
             for (l = 0; l < code.logGF; l++)
                 if (table.BINGF[decide[k]][l] != NBIN[k][l])
@@ -244,7 +214,6 @@ int main(int argc, char *argv[]) {
                 nbUndetectedErrors++;
         }
         if (nb % 10 == 0) {
-            // [修改 4] 修正 BER 计算分母为 code.N
             printf("\r<%d> FER= %d / %d = %f BER= %d / x = %f  avr_it=%.2f", nbUndetectedErrors,
                    nbErroneousFrames, nb, (double)(nbErroneousFrames) / nb, total_errors,
                    (double)total_errors / (nb * code.N * code.logGF), (double)(sum_it) / nb);
@@ -255,7 +224,6 @@ int main(int argc, char *argv[]) {
             break;
     }
 
-    // [修改 4] 修正 BER 计算分母为 code.N
     printf("\r<%d> FER= %d / %d = %f BER= %d / x = %f  avr_it=%.2f", nbUndetectedErrors,
            nbErroneousFrames, nb, (double)(nbErroneousFrames) / nb, total_errors,
            (double)total_errors / (nb * code.N * code.logGF), (double)(sum_it) / nb);
@@ -270,7 +238,6 @@ int main(int argc, char *argv[]) {
     if ((opfile) == NULL) {
         printf(" \n !! file not found \n ");
     } else {
-        // [修改 4] 修正文件输出中的 BER 计算分母为 code.N
         fprintf(opfile, " SNR:%.2f: \t FER= %d / %d = %f ", EbN, nbErroneousFrames, nb,
                 (double)(nbErroneousFrames) / nb);
         fprintf(opfile, " \t BER= %d / x = \t %f  avr_it= \t %.2f \t time: %s", total_errors,

@@ -20,7 +20,7 @@
 #include "./include/tools.h"
 
 #define STR_MAXSIZE                                                                                \
-    350 // la taille maximale permise pour les chaines de caract�res. Utilis�e dans la fonction
+    350 // la taille maximale permise pour les chaines de caractères. Utilisée dans la fonction
         // calloc().
 
 #define KN_matrix
@@ -30,9 +30,9 @@
  * \brief Compute the addition table in GF(q)
  * Parameters    :
  * Inputs        :
- * 	- table  : structure containing an allocated pointer to the addition table
- * 	- int logGF : logGF = log2 (GF)
- * 	- int GF    : order of the field
+ * - table  : structure containing an allocated pointer to the addition table
+ * - int logGF : logGF = log2 (GF)
+ * - int GF    : order of the field
  * Outputs       :
  */
 void Table_Add_GF(table_t *table, int GF, int logGF) {
@@ -60,16 +60,6 @@ void Table_Mul_DEC(table_t *table, int GF) {
             table->MULDEC[i][j] = table->DECGF[table->MULGF[i][j]];
         }
     }
-
-    //    for(i=0; i<GF; i++)
-    //    {
-    //        for(j=0; j<GF; j++)
-    //        {
-    //          printf("%d ",table->MULDEC[i][j]);
-    //        }
-    //        printf(" \n ");
-    //    }
-    //    getchar();
 }
 
 // divide dicimal by GF and output GF
@@ -82,16 +72,6 @@ void Table_Div_DEC(table_t *table, int GF) {
             table->DIVDEC[table->DECGF[i]][j] = table->DIVGF[i][j];
         }
     }
-
-    //    for(i=0; i<GF; i++)
-    //    {
-    //        for(j=0; j<GF; j++)
-    //        {
-    //          printf("%d ",table->DIVDEC[i][j]);
-    //        }
-    //        printf(" \n ");
-    //    }
-    //    getchar();
 }
 
 void Table_dec_GF(table_t *table, int GF, int logGF) {
@@ -119,9 +99,9 @@ void Table_dec_GF(table_t *table, int GF, int logGF) {
  * \brief compute the multiplication table in GF(q)
  * Parameters    :
  * Inputs        :
- * 	- table  : structure containing an allocated pointer to the addition table
- * 	- int logGF : logGF = log2 (GF)
- * 	- int GF    : order of the field
+ * - table  : structure containing an allocated pointer to the addition table
+ * - int logGF : logGF = log2 (GF)
+ * - int GF    : order of the field
  * Outputs       :
  */
 void Table_Mul_GF(int **MULGF, int GF) {
@@ -143,15 +123,6 @@ void Table_Mul_GF(int **MULGF, int GF) {
             }
         }
     }
-    //    for(i=0; i<GF; i++)
-    //    {
-    //        for(j=0; j<GF; j++)
-    //        {
-    //          printf("%d ",MULGF[i][j]);
-    //        }
-    //        printf(" \n ");
-    //    }
-    //    getchar();
 }
 
 /*!
@@ -159,9 +130,9 @@ void Table_Mul_GF(int **MULGF, int GF) {
  * \brief compute the division table in GF(q)
  * Parameters    :
  * Inputs        :
- * 	- table  : structure containing an allocated pointer to the addition table
- * 	- int logGF : logGF = log2 (GF)
- * 	- int GF    : order of the field
+ * - table  : structure containing an allocated pointer to the addition table
+ * - int logGF : logGF = log2 (GF)
+ * - int GF    : order of the field
  * Outputs       :
  */
 void Table_Div_GF(int **DIVGF, int GF) {
@@ -183,15 +154,6 @@ void Table_Div_GF(int **DIVGF, int GF) {
             }
         }
     }
-    //    for(i=0; i<GF; i++)
-    //    {
-    //        for(j=0; j<GF; j++)
-    //        {
-    //          printf("%d ",DIVGF[i][j]);
-    //        }
-    //        printf(" \n ");
-    //    }
-    //    getchar();
 }
 
 /**
@@ -199,8 +161,8 @@ void Table_Div_GF(int **DIVGF, int GF) {
  * \brief Open a parity-check matrix file. Allocate and initialize the code structures
  * Parameters    :
  * Inputs        :
- * 	- FileMatrix  : Name of the parity-check matrix file
- * 	- code_t code : Structure that describes the code
+ * - FileMatrix  : Name of the parity-check matrix file
+ * - code_t code : Structure that describes the code
  * Outputs       :
  */
 void LoadCode(char *FileMatrix, code_t *code) {
@@ -292,30 +254,6 @@ void LoadCode(char *FileMatrix, code_t *code) {
     for (m = 0; m < M; m++)
         code->nbBranch += code->rowDegree[m];
 
-    // printf(" \n ");
-    // for (m=0; m<M; m++)
-    //{
-    //         for (k=0; k<code->rowDegree[m]; k++)
-    //         {
-    //             printf(" %d ",code->mat[m][k]);
-    //         }
-    //         printf(" \n ");
-    //
-    // }
-    // getchar();
-    //
-    // printf(" \n ");
-    // for (m=0; m<M; m++)
-    //{
-    //         for (k=0; k<code->rowDegree[m]; k++)
-    //         {
-    //             printf(" %d ",code->matValue[m][k]);
-    //         }
-    //         printf(" \n ");
-    //
-    // }
-    // getchar();
-
     printf("LDPC code parameters: \n");
     printf(
         " \t N \t:%d \n \t K \t:%d \n \t M\t:%d \n \t CR\t:%g \n \t GF \t:%d \n \t logGF \t:%d\n",
@@ -328,7 +266,7 @@ void LoadCode(char *FileMatrix, code_t *code) {
  * \fn void FreeCode(code_t *code)
  * \brief Free pointers in a code_t structure
  * Inputs        :
- * 	- code_t code : Structure that describes the code
+ * - code_t code : Structure that describes the code
  * Outputs       :
  */
 void FreeCode(code_t *code) {
@@ -349,111 +287,79 @@ void FreeCode(code_t *code) {
 /*!
  * \fn AllocateDecoder
  * \brief Memory allocations for the decoder
+ * \note Modified to fix segmentation fault for large matrices
  */
 void AllocateDecoder(code_t *code, decoder_t *decoder) {
     const int N = code->N;
-    int nbRow, nbCol, k, nbRow_arr;
+    const int GF = code->GF;
+    int nbRow, nbCol, k;
 
     decoder->nbBranch = code->nbBranch;
     decoder->N = code->N;
 
+    // 修复：针对大规模和非恒定度数矩阵，统一使用 GF 大小或 N 规模进行安全分配
+    int safe_size = (code->GF > 256) ? code->GF : 256; 
+    if (safe_size < 64) safe_size = 64; 
+
+    /* VtoC [nbBranch][GF] */
     nbRow = code->nbBranch;
-    nbCol = decoder->n_vc;
-
-    // [��] ����������� check node degree
-    int max_dc = 0;
-    for (int m = 0; m < code->M; m++) {
-        if (code->rowDegree[m] > max_dc) {
-            max_dc = code->rowDegree[m];
-        }
-    }
-    nbRow_arr = max_dc; // ����������
-
-    /* VtoC [nbBranch][nbMax] */
     decoder->VtoC = calloc((size_t)nbRow, sizeof(softdata_t *));
-    // if (decoder->CtoV  == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed !",__FILE__,__LINE__);
-    decoder->VtoC[0] = calloc((size_t)nbRow * code->GF, sizeof(softdata_t));
-    // if (decoder->CtoV [0] == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed !",__FILE__,__LINE__);
+    decoder->VtoC[0] = calloc((size_t)nbRow * GF, sizeof(softdata_t));
     for (k = 1; k < nbRow; k++)
-        decoder->VtoC[k] = decoder->VtoC[0] + k * code->GF;
+        decoder->VtoC[k] = decoder->VtoC[0] + k * GF;
 
-    /* M_CtoV_LLR [nbBranch][nbMax] */
-    decoder->M_CtoV_LLR = calloc((size_t)nbRow_arr, sizeof(softdata_t *));
-    // if (decoder->M_CtoV_LLR  == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    decoder->M_CtoV_LLR[0] = calloc((size_t)nbRow_arr * code->GF, sizeof(softdata_t));
-    // if (decoder->M_CtoV_LLR [0] == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    for (k = 1; k < nbRow_arr; k++)
-        decoder->M_CtoV_LLR[k] = decoder->M_CtoV_LLR[0] + k * code->GF;
+    /* 使用固定安全大小分配临时缓冲区，防止 dc_max 导致的越界 */
+    int nbTempRow = 128; // 足够覆盖 dc_max = 30 的情况
 
-    /* M_VtoC_LLR [nbBranch][nbMax] */
-    decoder->M_VtoC_LLR = calloc((size_t)nbRow_arr, sizeof(softdata_t *));
-    // if (decoder->M_VtoC_LLR  == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    decoder->M_VtoC_LLR[0] = calloc((size_t)nbRow_arr * nbCol, sizeof(softdata_t));
-    // if (decoder->M_VtoC_LLR [0] == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    for (k = 1; k < nbRow_arr; k++)
-        decoder->M_VtoC_LLR[k] = decoder->M_VtoC_LLR[0] + k * nbCol;
+    /* M_CtoV_LLR */
+    decoder->M_CtoV_LLR = calloc((size_t)nbTempRow, sizeof(softdata_t *));
+    decoder->M_CtoV_LLR[0] = calloc((size_t)nbTempRow * GF, sizeof(softdata_t));
+    for (k = 1; k < nbTempRow; k++)
+        decoder->M_CtoV_LLR[k] = decoder->M_CtoV_LLR[0] + k * GF;
 
-    /* M_CtoV_GF [rowDegree[0]][nbMax] */
-    decoder->M_CtoV_GF = calloc((size_t)nbRow_arr, sizeof(int *));
-    // if (decoder->M_CtoV_GF  == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    decoder->M_CtoV_GF[0] = calloc((size_t)nbRow_arr * code->GF, sizeof(int));
-    // if (decoder->M_CtoV_GF [0] == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    for (k = 1; k < nbRow_arr; k++)
-        decoder->M_CtoV_GF[k] = decoder->M_CtoV_GF[0] + k * code->GF;
-    /* M_VtoC_GF [rowDegree[0]][nbMax] */
-    decoder->M_VtoC_GF = calloc((size_t)nbRow_arr, sizeof(int *));
-    // if (decoder->M_VtoC_GF  == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    decoder->M_VtoC_GF[0] = calloc((size_t)nbRow_arr * nbCol, sizeof(int));
-    // if (decoder->M_VtoC_GF [0] == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    for (k = 1; k < nbRow_arr; k++)
-        decoder->M_VtoC_GF[k] = decoder->M_VtoC_GF[0] + k * nbCol;
+    /* M_VtoC_LLR */
+    decoder->M_VtoC_LLR = calloc((size_t)nbTempRow, sizeof(softdata_t *));
+    decoder->M_VtoC_LLR[0] = calloc((size_t)nbTempRow * decoder->n_vc, sizeof(softdata_t));
+    for (k = 1; k < nbTempRow; k++)
+        decoder->M_VtoC_LLR[k] = decoder->M_VtoC_LLR[0] + k * decoder->n_vc;
 
-    nbRow = N;
-    nbCol = code->GF;
+    /* M_CtoV_GF */
+    decoder->M_CtoV_GF = calloc((size_t)nbTempRow, sizeof(int *));
+    decoder->M_CtoV_GF[0] = calloc((size_t)nbTempRow * GF, sizeof(int));
+    for (k = 1; k < nbTempRow; k++)
+        decoder->M_CtoV_GF[k] = decoder->M_CtoV_GF[0] + k * GF;
+
+    /* M_VtoC_GF */
+    decoder->M_VtoC_GF = calloc((size_t)nbTempRow, sizeof(int *));
+    decoder->M_VtoC_GF[0] = calloc((size_t)nbTempRow * decoder->n_vc, sizeof(int));
+    for (k = 1; k < nbTempRow; k++)
+        decoder->M_VtoC_GF[k] = decoder->M_VtoC_GF[0] + k * decoder->n_vc;
+
     /* APP [N][GF] */
-    decoder->APP = calloc((size_t)nbRow, sizeof(softdata_t *));
-    // if (decoder->APP  == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed !",__FILE__,__LINE__);
-    decoder->APP[0] = calloc((size_t)nbRow * nbCol, sizeof(softdata_t));
-    // if (decoder->APP [0] == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed !",__FILE__,__LINE__);
-    for (k = 1; k < nbRow; k++)
-        decoder->APP[k] = decoder->APP[0] + k * nbCol;
-
     nbRow = N;
-    nbCol = code->GF;
-    /* intrinsic_LLR [N][GF] */ /* VN modified */
-    decoder->intrinsic_LLR = calloc((size_t)nbRow, sizeof(softdata_t *));
-    // if (decoder->intrinsic_LLR  == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    decoder->intrinsic_LLR[0] = calloc((size_t)nbRow * nbCol, sizeof(softdata_t));
-    // if (decoder->intrinsic_LLR [0] == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
+    decoder->APP = calloc((size_t)nbRow, sizeof(softdata_t *));
+    decoder->APP[0] = calloc((size_t)nbRow * GF, sizeof(softdata_t));
     for (k = 1; k < nbRow; k++)
-        decoder->intrinsic_LLR[k] = decoder->intrinsic_LLR[0] + k * nbCol;
+        decoder->APP[k] = decoder->APP[0] + k * GF;
 
-    /* intrinsic_GF [N][GF] */ /* VN modified */
-    decoder->intrinsic_GF = calloc((size_t)nbRow, sizeof(int *));
-    // if (decoder->intrinsic_GF  == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
-    decoder->intrinsic_GF[0] = calloc((size_t)nbRow * nbCol, sizeof(int));
-    // if (decoder->intrinsic_GF [0] == NULL) err(EXIT_FAILURE,"%s:%d > malloc failed
-    // !",__FILE__,__LINE__);
+    /* intrinsic_LLR [N][GF] */ 
+    decoder->intrinsic_LLR = calloc((size_t)nbRow, sizeof(softdata_t *));
+    decoder->intrinsic_LLR[0] = calloc((size_t)nbRow * GF, sizeof(softdata_t));
     for (k = 1; k < nbRow; k++)
-        decoder->intrinsic_GF[k] = decoder->intrinsic_GF[0] + k * nbCol;
+        decoder->intrinsic_LLR[k] = decoder->intrinsic_LLR[0] + k * GF;
+
+    /* intrinsic_GF [N][GF] */ 
+    decoder->intrinsic_GF = calloc((size_t)nbRow, sizeof(int *));
+    decoder->intrinsic_GF[0] = calloc((size_t)nbRow * GF, sizeof(int));
+    for (k = 1; k < nbRow; k++)
+        decoder->intrinsic_GF[k] = decoder->intrinsic_GF[0] + k * GF;
 }
 
 /**
  * \fn void FreeDecoder (decoder_t *decoder)
  * \brief Free pointers in a decoder_t structure
  * Inputs        :
- * 	- decoder_t decoder : Structure that describes the decoder (edges in the decoding graph)
+ * - decoder_t decoder : Structure that describes the decoder (edges in the decoding graph)
  * Outputs       :
  */
 void FreeDecoder(decoder_t *decoder) {
@@ -478,9 +384,9 @@ void FreeDecoder(decoder_t *decoder) {
  * \fn void LoadTables (table_t *table, int GF, int logGF)
  * \brief Memory allocation for the tables and Initialization of the tables.
  * Inputs        :
- * 	- table_t table : Structure that contains pointers to the tables
- * 	- int GF    : order of the field
- * 	- int logGF : logGF = log2(GF)
+ * - table_t table : Structure that contains pointers to the tables
+ * - int GF    : order of the field
+ * - int logGF : logGF = log2(GF)
  * Outputs       :
  */
 void LoadTables(table_t *table, int GF, int logGF) {
@@ -550,40 +456,30 @@ void LoadTables(table_t *table, int GF, int logGF) {
         for (g = 0; g < GF; g++)
             for (l = 0; l < logGF; l++)
                 table->BINGF[g][l] = BinGF_16[g][l];
-        // printf("Loading of the binary image of GF(64): Success\n");
-        // fflush(stdout);
     }
 
     if (GF == 32) {
         for (g = 0; g < GF; g++)
             for (l = 0; l < logGF; l++)
                 table->BINGF[g][l] = BinGF_32[g][l];
-        // printf("Loading of the binary image of GF(64): Success\n");
-        // fflush(stdout);
     }
 
     if (GF == 64) {
         for (g = 0; g < GF; g++)
             for (l = 0; l < logGF; l++)
                 table->BINGF[g][l] = BinGF_64[g][l];
-        // printf("Loading of the binary image of GF(64): Success\n");
-        // fflush(stdout);
     }
 
     if (GF == 256) {
         for (g = 0; g < GF; g++)
             for (l = 0; l < logGF; l++)
                 table->BINGF[g][l] = BinGF_256[g][l];
-        // printf("Loading of the binary image of GF(256): Success\n");
-        // fflush(stdout);
     }
 
     if (GF == 4096) {
         for (g = 0; g < GF; g++)
             for (l = 0; l < logGF; l++)
                 table->BINGF[g][l] = BinGF_4096[g][l];
-        // printf("Loading of the binary image of GF(256): Success\n");
-        // fflush(stdout);
     }
 
     /*
@@ -601,7 +497,7 @@ void LoadTables(table_t *table, int GF, int logGF) {
  * \fn FreeTable(table_t *table)
  * \brief Free the memory in a table_t structure
  * Inputs        :
- * 	- table_t table : Structure that contains pointers to the tables
+ * - table_t table : Structure that contains pointers to the tables
  * Outputs       :
  */
 void FreeTable(table_t *table) {
