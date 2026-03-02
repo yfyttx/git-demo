@@ -1,34 +1,25 @@
 /**
- * main.cpp
- * * QLDPC Constructor: Hybrid (PEG + TIT QC-LDPC)
- * *
- * * Part 1: H1 (PEG) -> G1 (Kernel)
- * * Part 2: H2, H3 (TIT QC-LDPC Pair, where H2*H3^T = 0)
- * *
- * * HX = [ H1 (x) In2 ]
- * * [ In1 (x) H2 ]
- * *
- * * HZ = [ G1 (x) H3 ]
+ * main.cpp - 量子 LDPC 矩阵构造与导出工具 (方案 B 优化版)
+ * 目标：实现 M < N，优化大码长的 BP 译码性能
  */
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <algorithm>
+#include <ctime>
 #include <fstream>
 #include <iostream>
-#include <random>
 #include <vector>
 
-// 引入 PEG 和 TIT 构造头文件
 #include "../peg-unige/BigGirth.h"
 #include "../peg-unige/Random.h"
-#include "ldpc_codes/binary_codes.h" // TIT 构造函数在这里
+#include "ldpc_codes/binary_codes.h"
 
 using namespace Eigen;
 using namespace std;
 
 // ==========================================
-// 1. 通用 GF(64) 类
+// 1. GF(64) 类 - 高元域运算
 // ==========================================
 class SimpleGF {
     int m, size;
@@ -58,55 +49,25 @@ class SimpleGF {
     int mul(int a, int b) const {
         return (a == 0 || b == 0) ? 0 : exp_table[log_table[a] + log_table[b]];
     }
-    int div(int a, int b) const {
-        if (!b)
-            exit(1);
+    int inv(int a) const {
         if (!a)
             return 0;
-        int d = log_table[a] - log_table[b];
-        while (d < 0)
-            d += size - 1;
-        return exp_table[d];
+        return exp_table[(size - 1) - log_table[a]];
     }
-    int inv(int a) const {
-        return div(1, a);
+    int sub(int a, int b) const {
+        return a ^ b;
     }
     int exp(int k) const {
-        while (k < 0)
-            k += (size - 1);
         return exp_table[k % (size - 1)];
     }
     int log(int val) const {
         return (val <= 0 || val >= size) ? -1 : log_table[val];
     }
-    int sub(int a, int b) const {
-        return a ^ b;
-    }
 };
 
 // ==========================================
-// 2. 辅助工具：矩阵转换与保存
+// 2. 矩阵工具函数
 // ==========================================
-
-// 将 Eigen::MatrixXi (稠密) 转换为 SparseMatrix<int>，并随机赋予 GF 系数
-SparseMatrix<int> denseToSparse(const MatrixXi &dense, SimpleGF &gf) {
-    int rows = dense.rows();
-    int cols = dense.cols();
-    SparseMatrix<int> sparse(rows, cols);
-    vector<Triplet<int>> t;
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            if (dense(i, j) == 1) {
-                // TIT 生成的是二进制矩阵 (0/1)
-                // 这里我们给它赋予一个 GF(64) 的随机非零系数，以构造成非二进制码
-                int val = gf.exp(rand() % (gf.getSize() - 1));
-                t.emplace_back(i, j, val);
-            }
-        }
-    }
-    sparse.setFromTriplets(t.begin(), t.end());
-    return sparse;
-}
 
 void saveToEssaiFormat(const SparseMatrix<int> &H, const std::string &filename, SimpleGF &gf) {
     ofstream out(filename);
@@ -139,14 +100,26 @@ void saveToEssaiFormat(const SparseMatrix<int> &H, const std::string &filename, 
     cout << "  -> Saved " << filename << " (" << N << "x" << M << ")\n";
 }
 
-// ==========================================
-// 3. 构造与计算逻辑
-// ==========================================
+SparseMatrix<int> denseToSparse(const MatrixXi &dense, SimpleGF &gf) {
+    SparseMatrix<int> sparse(dense.rows(), dense.cols());
+    vector<Triplet<int>> t;
+    for (int i = 0; i < dense.rows(); ++i)
+        for (int j = 0; j < dense.cols(); ++j)
+            if (dense(i, j))
+                t.emplace_back(i, j, gf.exp(rand() % (gf.getSize() - 1)));
+    sparse.setFromTriplets(t.begin(), t.end());
+    return sparse;
+}
 
-// PEG 构造 H1
-SparseMatrix<int> buildH_PEG(int M, int N, int dv, SimpleGF &gf) {
-    cout << "  [PEG] Generating H1 (M=" << M << ", N=" << N << ")..." << endl;
-    vector<int> degSeq(N, dv);
+// 方案 B 优化：增加度为 2 的节点比例 (约 40%)
+SparseMatrix<int> buildH_PEG_Irregular(int M, int N, SimpleGF &gf) {
+    vector<int> degSeq(N);
+    for (int i = 0; i < N; ++i) {
+        if (i < 0.4 * N)
+            degSeq[i] = 2; // 40% 的度为 2
+        else
+            degSeq[i] = 3; // 其余为 3
+    }
     BigGirth bg(M, N, degSeq.data(), "dummy.dat", 1, 10000, false);
     bg.loadH();
     SparseMatrix<int> H(M, N);
@@ -159,14 +132,12 @@ SparseMatrix<int> buildH_PEG(int M, int N, int dv, SimpleGF &gf) {
     return H;
 }
 
-// 计算生成矩阵 G1 (H1 的核)
 SparseMatrix<int> computeGeneratorMatrix(const SparseMatrix<int> &H_sparse, SimpleGF &gf) {
     int m = H_sparse.rows(), n = H_sparse.cols();
     MatrixXi H = MatrixXi::Zero(m, n);
     for (int k = 0; k < H_sparse.outerSize(); ++k)
         for (SparseMatrix<int>::InnerIterator it(H_sparse, k); it; ++it)
             H(it.row(), it.col()) = it.value();
-
     int pivot_row = 0;
     vector<int> pivot_cols;
     vector<bool> is_pivot(n, false);
@@ -195,15 +166,14 @@ SparseMatrix<int> computeGeneratorMatrix(const SparseMatrix<int> &H_sparse, Simp
         is_pivot[col] = true;
         pivot_row++;
     }
-    int rank = pivot_cols.size();
-    SparseMatrix<int> G(n - rank, n);
+    SparseMatrix<int> G(n - (int)pivot_cols.size(), n);
     vector<Triplet<int>> tG;
     int f_idx = 0;
     for (int j = 0; j < n; ++j) {
         if (is_pivot[j])
             continue;
         tG.emplace_back(f_idx, j, 1);
-        for (int r = 0; r < rank; ++r) {
+        for (int r = 0; r < (int)pivot_cols.size(); ++r) {
             int val = H(r, j);
             if (val)
                 tG.emplace_back(f_idx, pivot_cols[r], val);
@@ -214,12 +184,10 @@ SparseMatrix<int> computeGeneratorMatrix(const SparseMatrix<int> &H_sparse, Simp
     return G;
 }
 
-// 克罗内克积
 SparseMatrix<int> kroneckerNB(const SparseMatrix<int> &A, const SparseMatrix<int> &B,
                               SimpleGF &gf) {
     SparseMatrix<int> C(A.rows() * B.rows(), A.cols() * B.cols());
     vector<Triplet<int>> t;
-    t.reserve((long long)A.nonZeros() * B.nonZeros());
     for (int k = 0; k < A.outerSize(); ++k)
         for (SparseMatrix<int>::InnerIterator itA(A, k); itA; ++itA)
             for (int l = 0; l < B.outerSize(); ++l)
@@ -234,98 +202,63 @@ SparseMatrix<int> kroneckerNB(const SparseMatrix<int> &A, const SparseMatrix<int
 }
 
 // ==========================================
-// 4. Main
+// 3. Main 仅生成与保存
 // ==========================================
 int main() {
     srand(time(0));
-    SimpleGF gf(6); // GF(64)
-    cout << "=== QLDPC: Hybrid (PEG + TIT) Construction ===\n";
+    SimpleGF gf(6);
+    cout << "=== Quantum LDPC Matrix Generator (Option A - Scheme B Optimized) ===\n";
 
-    // --------------------------------------------------------
-    // Step 1: 生成 H1 (PEG) 并计算 G1
-    // -------------------------------------------------k-------
-    // 参数: 30行 60列 (列重3)
-    SparseMatrix<int> H1 = buildH_PEG(60, 120, 3, gf);
-    SparseMatrix<int> G1 = computeGeneratorMatrix(H1, gf);
+    // 方案 B 参数设定
+    int J = 3, L = 7, P = 31; // H1 比值 3/7 = 0.428
+    int m2 = 10, n2 = 30;     // H2 比值 10/30 = 0.333
+    // 总比值 = 0.428 + 0.333 = 0.761 (< 1.0) -> 确保 M < N
 
-    // --------------------------------------------------------
-    // Step 2: 使用 TIT 算法生成 H2 和 H3
-    // --------------------------------------------------------
-    cout << "  [TIT] Constructing H2 and H3 using binary_codes.cpp logic...\n";
-    // 参数说明 (J, L, P, sigma, tau)
-    // J=3, L=5, P=10 --> H2 大小 (3*10)x(5*10) = 30x50
-    //                    H3 大小 (3*10)x(5*10) = 30x50
-    // 你可以调整 P 来改变码长，比如 P=20 -> 60x100
-    int J = 3, L = 5, P = 163;
-    int sigma = 2, tau = 3; // TIT 论文中的移位参数
+    cout << "  [1/3] Constructing H1, H3 (TIT: J=3, L=7, P=31) and H2, G2 (PEG: 10x30)..." << endl;
+    pair<MatrixXi, MatrixXi> tit = constructBinaryHMatrices(J, L, P, 2, 3);
 
-    // 调用库函数生成一对正交矩阵 (Hc, Hd)
-    pair<MatrixXi, MatrixXi> tit_matrices = constructBinaryHMatrices(J, L, P, sigma, tau);
+    SparseMatrix<int> H1 = denseToSparse(tit.first, gf);
+    SparseMatrix<int> H3 = denseToSparse(tit.second, gf);
+    SparseMatrix<int> H2 = buildH_PEG_Irregular(m2, n2, gf);
+    SparseMatrix<int> G2 = computeGeneratorMatrix(H2, gf);
 
-    // 转换并赋予随机 GF 系数
-    // H2 = Hc
-    SparseMatrix<int> H2 = denseToSparse(tit_matrices.first, gf);
-    // H3 = Hd (注意：TIT 保证 Hc * Hd^T = 0，所以 H3 可以直接作为 H2 的正交对偶)
-    SparseMatrix<int> H3 = denseToSparse(tit_matrices.second, gf);
-
-    cout << "  [TIT] Generated H2: " << H2.rows() << "x" << H2.cols() << endl;
-    cout << "  [TIT] Generated H3: " << H3.rows() << "x" << H3.cols() << endl;
-
-    // --------------------------------------------------------
-    // Step 3: 准备单位阵 (用于对齐)
-    // --------------------------------------------------------
-    // H1 (30x60) -> n1 = 60
-    // H2 (30x50) -> n2 = 50 (如果 P=10, L=5)
+    // 2. 构造量子校验矩阵 HX, HZ
+    cout << "  [2/3] Constructing HX and HZ (Hypergraph Product)..." << endl;
     int n1 = H1.cols();
-    int n2 = H2.cols();
-
-    SparseMatrix<int> In2(n2, n2);
-    for (int i = 0; i < n2; ++i)
-        In2.insert(i, i) = 1;
     SparseMatrix<int> In1(n1, n1);
-    for (int i = 0; i < n1; ++i)
-        In1.insert(i, i) = 1;
+    In1.setIdentity();
+    SparseMatrix<int> In2(n2, n2);
+    In2.setIdentity();
 
-    // --------------------------------------------------------
-    // Step 4: 构造 HX (上下拼接)
-    // --------------------------------------------------------
-    // Part A: H1 (x) In2 -> (30x60) x (50x50) = 1500 x 3000
-    // Part B: In1 (x) H2 -> (60x60) x (30x50) = 1800 x 3000
-    // 列数 3000 = n1 * n2，完美对齐！
-
-    cout << "  [Build] HX (Stacked)..." << endl;
+    // HX = [ H1 (x) In2 ; In1 (x) H2 ]
     SparseMatrix<int> HX_top = kroneckerNB(H1, In2, gf);
     SparseMatrix<int> HX_bot = kroneckerNB(In1, H2, gf);
-
     SparseMatrix<int> HX(HX_top.rows() + HX_bot.rows(), HX_top.cols());
     vector<Triplet<int>> tX;
     for (int k = 0; k < HX_top.outerSize(); ++k)
         for (SparseMatrix<int>::InnerIterator it(HX_top, k); it; ++it)
             tX.emplace_back(it.row(), it.col(), it.value());
-
-    int row_off = HX_top.rows();
+    int r_off = HX_top.rows();
     for (int k = 0; k < HX_bot.outerSize(); ++k)
         for (SparseMatrix<int>::InnerIterator it(HX_bot, k); it; ++it)
-            tX.emplace_back(it.row() + row_off, it.col(), it.value());
+            tX.emplace_back(it.row() + r_off, it.col(), it.value());
     HX.setFromTriplets(tX.begin(), tX.end());
 
-    // --------------------------------------------------------
-    // Step 5: 构造 HZ (G1 x H3)
-    // --------------------------------------------------------
-    // G1 (30x60) x H3 (30x50) -> 900 x 3000
-    // 列数 3000，与 HX 完美一致！
+    // HZ = H3 (x) G2 (G2 现在有 n2 - m2 = 20 行)
+    SparseMatrix<int> HZ = kroneckerNB(H3, G2, gf);
 
-    cout << "  [Build] HZ (G1 x H3)..." << endl;
-    SparseMatrix<int> HZ = kroneckerNB(G1, H3, gf);
-
-    cout << "  [Result] HX: " << HX.rows() << "x" << HX.cols() << endl;
-    cout << "  [Result] HZ: " << HZ.rows() << "x" << HZ.cols() << endl;
-
-    // --------------------------------------------------------
-    // Step 6: 保存
-    // --------------------------------------------------------
+    // 3. 导出文件
+    cout << "  [3/3] Exporting matrices..." << endl;
+    saveToEssaiFormat(H1, "H1_sparse.txt", gf);
+    saveToEssaiFormat(H3, "H3_sparse.txt", gf);
     saveToEssaiFormat(HX, "HX_Safe_GF64.txt", gf);
     saveToEssaiFormat(HZ, "HZ_Safe_GF64.txt", gf);
+
+    cout << "\n=== Done ===\n";
+    cout << "Run HZ simulation with k2=" << G2.rows() << ":\n";
+    cout << "  ./essai 1000 50 ../../build/H3_sparse.txt -0.001 15 15 0.5 20 " << G2.rows() << "\n";
+    cout << "Run HX simulation (Direct):\n";
+    cout << "  ./essai 1000 50 ../../build/HX_Safe_GF64.txt -0.001 15 15 0.5 20 1\n";
 
     return 0;
 }
