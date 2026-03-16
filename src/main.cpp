@@ -1,6 +1,6 @@
 /**
- * main.cpp - 量子 LDPC 矩阵构造与导出工具 (方案 B 优化版)
- * 目标：实现 M < N，优化大码长的 BP 译码性能
+ * main.cpp - 量子 LDPC 矩阵构造与导出工具 (H2 增强版)
+ * 目标：通过增大 H2 规模确保无 4 环，同时保持 H1/H3 的 TIT 构造逻辑
  */
 
 #include <Eigen/Dense>
@@ -111,16 +111,19 @@ SparseMatrix<int> denseToSparse(const MatrixXi &dense, SimpleGF &gf) {
     return sparse;
 }
 
-// 方案 B 优化：增加度为 2 的节点比例 (约 40%)
 SparseMatrix<int> buildH_PEG_Irregular(int M, int N, SimpleGF &gf) {
     vector<int> degSeq(N);
     for (int i = 0; i < N; ++i) {
-        if (i < 0.4 * N)
-            degSeq[i] = 2; // 40% 的度为 2
+        double pivot = (double)i / N;
+        if (pivot < 0.4)
+            degSeq[i] = 2;
+        else if (pivot < 0.9)
+            degSeq[i] = 3;
         else
-            degSeq[i] = 3; // 其余为 3
+            degSeq[i] = 4;
     }
-    BigGirth bg(M, N, degSeq.data(), "dummy.dat", 1, 10000, false);
+    // 目标围长设为 6，尝试 10000 次
+    BigGirth bg(M, N, degSeq.data(), "dummy.dat", 6, 10000, false);
     bg.loadH();
     SparseMatrix<int> H(M, N);
     vector<Triplet<int>> t;
@@ -207,14 +210,15 @@ SparseMatrix<int> kroneckerNB(const SparseMatrix<int> &A, const SparseMatrix<int
 int main() {
     srand(time(0));
     SimpleGF gf(6);
-    cout << "=== Quantum LDPC Matrix Generator (Option A - Scheme B Optimized) ===\n";
+    cout << "=== Quantum LDPC Matrix Generator (H2 30x90 Version) ===\n";
 
-    // 方案 B 参数设定
-    int J = 3, L = 7, P = 31; // H1 比值 3/7 = 0.428
-    int m2 = 10, n2 = 30;     // H2 比值 10/30 = 0.333
-    // 总比值 = 0.428 + 0.333 = 0.761 (< 1.0) -> 确保 M < N
+    // H1/H3 使用 TIT 算法 (J=3, L=7, P=31)
+    int J = 3, L = 7, P = 31;
 
-    cout << "  [1/3] Constructing H1, H3 (TIT: J=3, L=7, P=31) and H2, G2 (PEG: 10x30)..." << endl;
+    // H2 使用 PEG 算法 (增大到 30x90 以规避 4 环)
+    int m2 = 30, n2 = 90;
+
+    cout << "  [1/3] Constructing H1, H3 (TIT) and H2, G2 (PEG)..." << endl;
     pair<MatrixXi, MatrixXi> tit = constructBinaryHMatrices(J, L, P, 2, 3);
 
     SparseMatrix<int> H1 = denseToSparse(tit.first, gf);
@@ -244,7 +248,7 @@ int main() {
             tX.emplace_back(it.row() + r_off, it.col(), it.value());
     HX.setFromTriplets(tX.begin(), tX.end());
 
-    // HZ = H3 (x) G2 (G2 现在有 n2 - m2 = 20 行)
+    // HZ = H3 (x) G2
     SparseMatrix<int> HZ = kroneckerNB(H3, G2, gf);
 
     // 3. 导出文件
@@ -255,10 +259,7 @@ int main() {
     saveToEssaiFormat(HZ, "HZ_Safe_GF64.txt", gf);
 
     cout << "\n=== Done ===\n";
-    cout << "Run HZ simulation with k2=" << G2.rows() << ":\n";
-    cout << "  ./essai 1000 50 ../../build/H3_sparse.txt -0.001 15 15 0.5 20 " << G2.rows() << "\n";
-    cout << "Run HX simulation (Direct):\n";
-    cout << "  ./essai 1000 50 ../../build/HX_Safe_GF64.txt -0.001 15 15 0.5 20 1\n";
-
+    cout << "HX Dimension: " << HX.cols() << "x" << HX.rows() << endl;
+    cout << "HZ Dimension: " << HZ.cols() << "x" << HZ.rows() << endl;
     return 0;
 }

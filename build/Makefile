@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ldpc_constructor
+# Target rules for targets named construct
 
 # Build rule for target.
-ldpc_constructor: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ldpc_constructor
-.PHONY : ldpc_constructor
+construct: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 construct
+.PHONY : construct
 
 # fast build rule for target.
-ldpc_constructor/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/build
-.PHONY : ldpc_constructor/fast
+construct/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/build
+.PHONY : construct/fast
 
 peg-unige/BigGirth.o: peg-unige/BigGirth.C.o
 .PHONY : peg-unige/BigGirth.o
 
 # target to build an object file
 peg-unige/BigGirth.C.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/peg-unige/BigGirth.C.o
 .PHONY : peg-unige/BigGirth.C.o
 
 peg-unige/BigGirth.i: peg-unige/BigGirth.C.i
@@ -142,7 +142,7 @@ peg-unige/BigGirth.i: peg-unige/BigGirth.C.i
 
 # target to preprocess a source file
 peg-unige/BigGirth.C.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/peg-unige/BigGirth.C.i
 .PHONY : peg-unige/BigGirth.C.i
 
 peg-unige/BigGirth.s: peg-unige/BigGirth.C.s
@@ -150,7 +150,7 @@ peg-unige/BigGirth.s: peg-unige/BigGirth.C.s
 
 # target to generate assembly for a file
 peg-unige/BigGirth.C.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/peg-unige/BigGirth.C.s
 .PHONY : peg-unige/BigGirth.C.s
 
 peg-unige/CyclesOfGraph.o: peg-unige/CyclesOfGraph.C.o
@@ -158,7 +158,7 @@ peg-unige/CyclesOfGraph.o: peg-unige/CyclesOfGraph.C.o
 
 # target to build an object file
 peg-unige/CyclesOfGraph.C.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/peg-unige/CyclesOfGraph.C.o
 .PHONY : peg-unige/CyclesOfGraph.C.o
 
 peg-unige/CyclesOfGraph.i: peg-unige/CyclesOfGraph.C.i
@@ -166,7 +166,7 @@ peg-unige/CyclesOfGraph.i: peg-unige/CyclesOfGraph.C.i
 
 # target to preprocess a source file
 peg-unige/CyclesOfGraph.C.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/peg-unige/CyclesOfGraph.C.i
 .PHONY : peg-unige/CyclesOfGraph.C.i
 
 peg-unige/CyclesOfGraph.s: peg-unige/CyclesOfGraph.C.s
@@ -174,7 +174,7 @@ peg-unige/CyclesOfGraph.s: peg-unige/CyclesOfGraph.C.s
 
 # target to generate assembly for a file
 peg-unige/CyclesOfGraph.C.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/peg-unige/CyclesOfGraph.C.s
 .PHONY : peg-unige/CyclesOfGraph.C.s
 
 peg-unige/Random.o: peg-unige/Random.C.o
@@ -182,7 +182,7 @@ peg-unige/Random.o: peg-unige/Random.C.o
 
 # target to build an object file
 peg-unige/Random.C.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/peg-unige/Random.C.o
 .PHONY : peg-unige/Random.C.o
 
 peg-unige/Random.i: peg-unige/Random.C.i
@@ -190,7 +190,7 @@ peg-unige/Random.i: peg-unige/Random.C.i
 
 # target to preprocess a source file
 peg-unige/Random.C.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/peg-unige/Random.C.i
 .PHONY : peg-unige/Random.C.i
 
 peg-unige/Random.s: peg-unige/Random.C.s
@@ -198,39 +198,15 @@ peg-unige/Random.s: peg-unige/Random.C.s
 
 # target to generate assembly for a file
 peg-unige/Random.C.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/peg-unige/Random.C.s
 .PHONY : peg-unige/Random.C.s
-
-src/gf2p/gf2p.o: src/gf2p/gf2p.cpp.o
-.PHONY : src/gf2p/gf2p.o
-
-# target to build an object file
-src/gf2p/gf2p.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o
-.PHONY : src/gf2p/gf2p.cpp.o
-
-src/gf2p/gf2p.i: src/gf2p/gf2p.cpp.i
-.PHONY : src/gf2p/gf2p.i
-
-# target to preprocess a source file
-src/gf2p/gf2p.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.i
-.PHONY : src/gf2p/gf2p.cpp.i
-
-src/gf2p/gf2p.s: src/gf2p/gf2p.cpp.s
-.PHONY : src/gf2p/gf2p.s
-
-# target to generate assembly for a file
-src/gf2p/gf2p.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.s
-.PHONY : src/gf2p/gf2p.cpp.s
 
 src/ldpc_codes/binary_codes.o: src/ldpc_codes/binary_codes.cpp.o
 .PHONY : src/ldpc_codes/binary_codes.o
 
 # target to build an object file
 src/ldpc_codes/binary_codes.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/src/ldpc_codes/binary_codes.cpp.o
 .PHONY : src/ldpc_codes/binary_codes.cpp.o
 
 src/ldpc_codes/binary_codes.i: src/ldpc_codes/binary_codes.cpp.i
@@ -238,7 +214,7 @@ src/ldpc_codes/binary_codes.i: src/ldpc_codes/binary_codes.cpp.i
 
 # target to preprocess a source file
 src/ldpc_codes/binary_codes.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/src/ldpc_codes/binary_codes.cpp.i
 .PHONY : src/ldpc_codes/binary_codes.cpp.i
 
 src/ldpc_codes/binary_codes.s: src/ldpc_codes/binary_codes.cpp.s
@@ -246,39 +222,15 @@ src/ldpc_codes/binary_codes.s: src/ldpc_codes/binary_codes.cpp.s
 
 # target to generate assembly for a file
 src/ldpc_codes/binary_codes.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/src/ldpc_codes/binary_codes.cpp.s
 .PHONY : src/ldpc_codes/binary_codes.cpp.s
-
-src/ldpc_codes/nonbinary_codes.o: src/ldpc_codes/nonbinary_codes.cpp.o
-.PHONY : src/ldpc_codes/nonbinary_codes.o
-
-# target to build an object file
-src/ldpc_codes/nonbinary_codes.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o
-.PHONY : src/ldpc_codes/nonbinary_codes.cpp.o
-
-src/ldpc_codes/nonbinary_codes.i: src/ldpc_codes/nonbinary_codes.cpp.i
-.PHONY : src/ldpc_codes/nonbinary_codes.i
-
-# target to preprocess a source file
-src/ldpc_codes/nonbinary_codes.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.i
-.PHONY : src/ldpc_codes/nonbinary_codes.cpp.i
-
-src/ldpc_codes/nonbinary_codes.s: src/ldpc_codes/nonbinary_codes.cpp.s
-.PHONY : src/ldpc_codes/nonbinary_codes.s
-
-# target to generate assembly for a file
-src/ldpc_codes/nonbinary_codes.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.s
-.PHONY : src/ldpc_codes/nonbinary_codes.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -286,7 +238,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -294,32 +246,8 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/construct.dir/build.make CMakeFiles/construct.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
-
-src/utils/matrix_utils.o: src/utils/matrix_utils.cpp.o
-.PHONY : src/utils/matrix_utils.o
-
-# target to build an object file
-src/utils/matrix_utils.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o
-.PHONY : src/utils/matrix_utils.cpp.o
-
-src/utils/matrix_utils.i: src/utils/matrix_utils.cpp.i
-.PHONY : src/utils/matrix_utils.i
-
-# target to preprocess a source file
-src/utils/matrix_utils.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.i
-.PHONY : src/utils/matrix_utils.cpp.i
-
-src/utils/matrix_utils.s: src/utils/matrix_utils.cpp.s
-.PHONY : src/utils/matrix_utils.s
-
-# target to generate assembly for a file
-src/utils/matrix_utils.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.s
-.PHONY : src/utils/matrix_utils.cpp.s
 
 # Help Target
 help:
@@ -329,7 +257,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... ldpc_constructor"
+	@echo "... construct"
 	@echo "... peg-unige/BigGirth.o"
 	@echo "... peg-unige/BigGirth.i"
 	@echo "... peg-unige/BigGirth.s"
@@ -339,21 +267,12 @@ help:
 	@echo "... peg-unige/Random.o"
 	@echo "... peg-unige/Random.i"
 	@echo "... peg-unige/Random.s"
-	@echo "... src/gf2p/gf2p.o"
-	@echo "... src/gf2p/gf2p.i"
-	@echo "... src/gf2p/gf2p.s"
 	@echo "... src/ldpc_codes/binary_codes.o"
 	@echo "... src/ldpc_codes/binary_codes.i"
 	@echo "... src/ldpc_codes/binary_codes.s"
-	@echo "... src/ldpc_codes/nonbinary_codes.o"
-	@echo "... src/ldpc_codes/nonbinary_codes.i"
-	@echo "... src/ldpc_codes/nonbinary_codes.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/utils/matrix_utils.o"
-	@echo "... src/utils/matrix_utils.i"
-	@echo "... src/utils/matrix_utils.s"
 .PHONY : help
 
 
