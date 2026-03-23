@@ -1,6 +1,6 @@
 /**
- * main.cpp - 量子 LDPC 矩阵构造与导出工具 (H2 增强版)
- * 目标：通过增大 H2 规模确保无 4 环，同时保持 H1/H3 的 TIT 构造逻辑
+ * main.cpp - TIT 架构矩阵构造工具
+ * 功能：生成 H1(TIT) 和 H2(PEG)，并计算导出 G2 (H2的生成矩阵)
  */
 
 #include <Eigen/Dense>
@@ -30,7 +30,7 @@ class SimpleGF {
         size = 1 << m;
         exp_table.resize(size * 2);
         log_table.resize(size);
-        int prim_poly = (m == 6) ? 0x43 : 0x13;
+        int prim_poly = (m == 6) ? 0x43 : 0x13; // GF(64) 多项式
         int x = 1;
         for (int i = 0; i < size - 1; i++) {
             exp_table[i] = x;
@@ -61,14 +61,17 @@ class SimpleGF {
         return exp_table[k % (size - 1)];
     }
     int log(int val) const {
-        return (val <= 0 || val >= size) ? -1 : log_table[val];
+        if (val <= 0 || val >= size)
+            return -1;
+        return log_table[val];
     }
 };
 
 // ==========================================
-// 2. 矩阵工具函数
+// 2. 导出与构造工具
 // ==========================================
 
+// 导出为 Essai 格式 (译码器读取格式)
 void saveToEssaiFormat(const SparseMatrix<int> &H, const std::string &filename, SimpleGF &gf) {
     ofstream out(filename);
     if (!out)
@@ -100,6 +103,7 @@ void saveToEssaiFormat(const SparseMatrix<int> &H, const std::string &filename, 
     cout << "  -> Saved " << filename << " (" << N << "x" << M << ")\n";
 }
 
+// 将 Eigen 稠密矩阵转为非二进制稀疏矩阵
 SparseMatrix<int> denseToSparse(const MatrixXi &dense, SimpleGF &gf) {
     SparseMatrix<int> sparse(dense.rows(), dense.cols());
     vector<Triplet<int>> t;
@@ -111,18 +115,9 @@ SparseMatrix<int> denseToSparse(const MatrixXi &dense, SimpleGF &gf) {
     return sparse;
 }
 
-SparseMatrix<int> buildH_PEG_Irregular(int M, int N, SimpleGF &gf) {
-    vector<int> degSeq(N);
-    for (int i = 0; i < N; ++i) {
-        double pivot = (double)i / N;
-        if (pivot < 0.4)
-            degSeq[i] = 2;
-        else if (pivot < 0.9)
-            degSeq[i] = 3;
-        else
-            degSeq[i] = 4;
-    }
-    // 目标围长设为 6，尝试 10000 次
+// 使用 PEG 算法构造 H2 矩阵
+SparseMatrix<int> buildH2_PEG(int M, int N, SimpleGF &gf) {
+    vector<int> degSeq(N, 3); // 固定列重为 3
     BigGirth bg(M, N, degSeq.data(), "dummy.dat", 6, 10000, false);
     bg.loadH();
     SparseMatrix<int> H(M, N);
@@ -135,15 +130,18 @@ SparseMatrix<int> buildH_PEG_Irregular(int M, int N, SimpleGF &gf) {
     return H;
 }
 
+// 高斯消元法计算 H 的生成矩阵 G (零空间)
 SparseMatrix<int> computeGeneratorMatrix(const SparseMatrix<int> &H_sparse, SimpleGF &gf) {
     int m = H_sparse.rows(), n = H_sparse.cols();
     MatrixXi H = MatrixXi::Zero(m, n);
     for (int k = 0; k < H_sparse.outerSize(); ++k)
         for (SparseMatrix<int>::InnerIterator it(H_sparse, k); it; ++it)
             H(it.row(), it.col()) = it.value();
+
     int pivot_row = 0;
     vector<int> pivot_cols;
     vector<bool> is_pivot(n, false);
+
     for (int col = 0; col < n && pivot_row < m; ++col) {
         int sel = -1;
         for (int r = pivot_row; r < m; ++r)
@@ -153,23 +151,29 @@ SparseMatrix<int> computeGeneratorMatrix(const SparseMatrix<int> &H_sparse, Simp
             }
         if (sel == -1)
             continue;
+
         if (sel != pivot_row)
-            for (int k = 0; k < n; ++k)
-                std::swap(H(pivot_row, k), H(sel, k));
+            H.row(pivot_row).swap(H.row(sel));
+
         int iv = gf.inv(H(pivot_row, col));
         for (int k = col; k < n; ++k)
             H(pivot_row, k) = gf.mul(H(pivot_row, k), iv);
-        for (int r = 0; r < m; ++r)
+
+        for (int r = 0; r < m; ++r) {
             if (r != pivot_row && H(r, col)) {
                 int f = H(r, col);
                 for (int k = col; k < n; ++k)
                     H(r, k) = gf.sub(H(r, k), gf.mul(f, H(pivot_row, k)));
             }
+        }
         pivot_cols.push_back(col);
         is_pivot[col] = true;
         pivot_row++;
     }
-    SparseMatrix<int> G(n - (int)pivot_cols.size(), n);
+
+    // 构造 G 矩阵，使得 H * G^T = 0
+    int dim_k = n - (int)pivot_cols.size();
+    SparseMatrix<int> G(dim_k, n);
     vector<Triplet<int>> tG;
     int f_idx = 0;
     for (int j = 0; j < n; ++j) {
@@ -187,79 +191,40 @@ SparseMatrix<int> computeGeneratorMatrix(const SparseMatrix<int> &H_sparse, Simp
     return G;
 }
 
-SparseMatrix<int> kroneckerNB(const SparseMatrix<int> &A, const SparseMatrix<int> &B,
-                              SimpleGF &gf) {
-    SparseMatrix<int> C(A.rows() * B.rows(), A.cols() * B.cols());
-    vector<Triplet<int>> t;
-    for (int k = 0; k < A.outerSize(); ++k)
-        for (SparseMatrix<int>::InnerIterator itA(A, k); itA; ++itA)
-            for (int l = 0; l < B.outerSize(); ++l)
-                for (SparseMatrix<int>::InnerIterator itB(B, l); itB; ++itB) {
-                    int val = gf.mul(itA.value(), itB.value());
-                    if (val)
-                        t.emplace_back(itA.row() * B.rows() + itB.row(),
-                                       itA.col() * B.cols() + itB.col(), val);
-                }
-    C.setFromTriplets(t.begin(), t.end());
-    return C;
-}
-
 // ==========================================
-// 3. Main 仅生成与保存
+// 3. Main 函数
 // ==========================================
 int main() {
     srand(time(0));
-    SimpleGF gf(6);
-    cout << "=== Quantum LDPC Matrix Generator (H2 30x90 Version) ===\n";
+    SimpleGF gf(6); // GF(64)
+    cout << "=== TIT Matrix Generator (Syndrome-Splitting Version) ===\n";
 
-    // H1/H3 使用 TIT 算法 (J=3, L=7, P=31)
+    // H1 参数 (TIT 构造: J=3, L=7, P=31)
     int J = 3, L = 7, P = 31;
+    // H2 参数 (PEG 构造: 20x60)
+    int m2 = 20, n2 = 60;
 
-    // H2 使用 PEG 算法 (增大到 30x90 以规避 4 环)
-    int m2 = 30, n2 = 90;
+    cout << "  [1/2] Constructing H1 (TIT) and H2 (PEG)..." << endl;
 
-    cout << "  [1/3] Constructing H1, H3 (TIT) and H2, G2 (PEG)..." << endl;
+    // 生成 H1, H3
     pair<MatrixXi, MatrixXi> tit = constructBinaryHMatrices(J, L, P, 2, 3);
-
     SparseMatrix<int> H1 = denseToSparse(tit.first, gf);
-    SparseMatrix<int> H3 = denseToSparse(tit.second, gf);
-    SparseMatrix<int> H2 = buildH_PEG_Irregular(m2, n2, gf);
+
+    // 生成 H2 并计算其生成矩阵 G2
+    SparseMatrix<int> H2 = buildH2_PEG(m2, n2, gf);
+    cout << "  [2/2] Computing G2 (Null space of H2)..." << endl;
     SparseMatrix<int> G2 = computeGeneratorMatrix(H2, gf);
 
-    // 2. 构造量子校验矩阵 HX, HZ
-    cout << "  [2/3] Constructing HX and HZ (Hypergraph Product)..." << endl;
-    int n1 = H1.cols();
-    SparseMatrix<int> In1(n1, n1);
-    In1.setIdentity();
-    SparseMatrix<int> In2(n2, n2);
-    In2.setIdentity();
-
-    // HX = [ H1 (x) In2 ; In1 (x) H2 ]
-    SparseMatrix<int> HX_top = kroneckerNB(H1, In2, gf);
-    SparseMatrix<int> HX_bot = kroneckerNB(In1, H2, gf);
-    SparseMatrix<int> HX(HX_top.rows() + HX_bot.rows(), HX_top.cols());
-    vector<Triplet<int>> tX;
-    for (int k = 0; k < HX_top.outerSize(); ++k)
-        for (SparseMatrix<int>::InnerIterator it(HX_top, k); it; ++it)
-            tX.emplace_back(it.row(), it.col(), it.value());
-    int r_off = HX_top.rows();
-    for (int k = 0; k < HX_bot.outerSize(); ++k)
-        for (SparseMatrix<int>::InnerIterator it(HX_bot, k); it; ++it)
-            tX.emplace_back(it.row() + r_off, it.col(), it.value());
-    HX.setFromTriplets(tX.begin(), tX.end());
-
-    // HZ = H3 (x) G2
-    SparseMatrix<int> HZ = kroneckerNB(H3, G2, gf);
-
-    // 3. 导出文件
-    cout << "  [3/3] Exporting matrices..." << endl;
+    // 导出文件
     saveToEssaiFormat(H1, "H1_sparse.txt", gf);
-    saveToEssaiFormat(H3, "H3_sparse.txt", gf);
-    saveToEssaiFormat(HX, "HX_Safe_GF64.txt", gf);
-    saveToEssaiFormat(HZ, "HZ_Safe_GF64.txt", gf);
+    saveToEssaiFormat(H2, "H2_sparse.txt", gf);
+    saveToEssaiFormat(G2, "G2_sparse.txt", gf);
 
     cout << "\n=== Done ===\n";
-    cout << "HX Dimension: " << HX.cols() << "x" << HX.rows() << endl;
-    cout << "HZ Dimension: " << HZ.cols() << "x" << HZ.rows() << endl;
+    cout << "H1 size: " << H1.cols() << "x" << H1.rows() << endl;
+    cout << "H2 size: " << H2.cols() << "x" << H2.rows() << endl;
+    cout << "G2 (Subblocks) size: " << G2.cols() << "x" << G2.rows() << endl;
+    cout << "TIT Split Decoding will run " << G2.rows() << " parallel H1 decoders." << endl;
+
     return 0;
 }

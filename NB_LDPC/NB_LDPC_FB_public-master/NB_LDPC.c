@@ -1,172 +1,124 @@
-/*!
- * \file NB_LDPC.c
- * \brief Quantum Syndrome-Splitting Decoder for Option A (HZ = H3 x G2)
- * \author Modified for Quantum CSS Splitting
- */
-
+#include "./include/NB_LDPC.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#include "./include/NB_LDPC.h"
-
-// 外部信道函数
-void ModelChannel_BSC(code_t *code, decoder_t *decoder, table_t *table, int **NBIN, float p,
-                      int *Idum);
-
 int main(int argc, char *argv[]) {
-    int k, l, n, iter, i, g, nb;
-    int **NBIN, *NSYMB;
-    int *decide;
-    int NbIterMax, NbMonteCarlo;
-    float EbN;
-    int NbOper;
-    float offset;
-    char *FileMatrix;
-    int synd = 0, nbErroneousFrames = 0;
-    int total_errors = 0;
-
-    code_t code; // 这里加载的是稀疏的 H3
-    table_t table;
-    decoder_t decoder;
-
-    int Idum = -1;
-    srand(time(NULL));
-
-    if (argc < 9) {
-        printf("Usage: %s <NbMonteCarlo> <NbIterMax> <FileH3> <p_error> <n_vc> <n_cv> <offset> "
-               "<NbOper> <k2>\n",
-               argv[0]);
-        return (EXIT_FAILURE);
-    }
-    FileMatrix = malloc(STR_MAXSIZE);
-    if (FileMatrix == NULL)
+    if (argc < 8) {
+        printf(
+            "Usage: %s <NbMonteCarlo> <NbIterMax> <FileH1> <FileG2> <p_error> <offset> <NbOper>\n",
+            argv[0]);
         return EXIT_FAILURE;
-    NbMonteCarlo = atoi(argv[1]);
-    NbIterMax = atoi(argv[2]);
-    FileMatrix = strdup(argv[3]);
-    EbN = atof(argv[4]); // 负数代表物理错误率 p
-    decoder.n_vc = atoi(argv[5]);
-    decoder.n_cv = atoi(argv[6]);
-    offset = atof(argv[7]);
-    NbOper = atoi(argv[8]);
-    int k2 = (argc > 9) ? atoi(argv[9]) : 15; // 拆分块数，对应 G2 的行数
+    }
 
-    printf(" === Quantum Syndrome-Splitting Log-EMS Decoder === \n");
-    printf("Loading Sparse Matrix H3 (for subblock decoding): %s\n", FileMatrix);
-    LoadCode(FileMatrix, &code);
-    LoadTables(&table, code.GF, code.logGF);
-    AllocateDecoder(&code, &decoder);
+    // 参数解析
+    int NbMonteCarlo = atoi(argv[1]);
+    int NbIterMax = atoi(argv[2]);
+    char *FileH1 = argv[3];
+    char *FileG2 = argv[4];
+    float p_error = atof(argv[5]);
+    float offset = atof(argv[6]);
+    int NbOper = atoi(argv[7]);
 
-    // 确定 DC 范围用于数组分配
-    int dc_max = 0;
-    for (i = 0; i < code.M; i++)
-        if (code.rowDegree[i] > dc_max)
-            dc_max = code.rowDegree[i];
-    softdata_t Mvc_temp[dc_max][code.GF];
+    code_t codeH1 = {0}, codeG2 = {0};
+    table_t table = {0};
+    decoder_t decH1 = {0};
 
-    // 量子长码参数：N_total = n3 * n2 (此处 n2 是 H2 的列数，由 k2 和 r2 决定，简单假设为 2*k2)
-    int n3 = code.N;
-    int N_total = n3 * k2; // 简化模型：假设 G2 是恒等扩展或根据你的 HZ 尺寸对齐
+    srand(time(NULL));
+    LoadCode(FileH1, &codeH1);
+    LoadCode(FileG2, &codeG2); // G2 的行数决定了并行子块数
+    LoadTables(&table, codeH1.GF, codeH1.logGF);
 
-    printf("Subblock Matrix (H3): %d x %d\n", code.M, code.N);
-    printf("Total Quantum Bits (for X-error simulation): %d\n", N_total);
-    printf("Splitting into %d subblocks...\n", k2);
+    decH1.n_vc = NbOper;
+    AllocateDecoder(&codeH1, &decH1);
 
-    /* 分配长错误向量内存 */
-    int *X_Errors = calloc(N_total, sizeof(int));
-    decide = calloc(code.N, sizeof(int));
+    int n1 = codeH1.N;
+    int k2 = codeG2.M; // 论文逻辑：子块数量
+    int nbErroneousFrames = 0;
 
-    time_t start_time = time(NULL);
-    printf("Simulation started...\n");
+    printf("=== TIT Syndrome-Splitting Decoder (H1 x G2) GF(%d) ===\n", codeH1.GF);
+    printf("Config: Subblocks=%d, Qubits/Block=%d, p=%.4f\n", k2, n1, p_error);
 
-    int sum_it = 0;
-    for (nb = 1; nb <= NbMonteCarlo; nb++) {
+    int *X_errors = calloc(n1, sizeof(int));
+    int *decide = calloc(n1, sizeof(int));
 
-        // 1. 在物理比特上注入量子 X 错误 (BSC 信道)
-        float p_error = -EbN;
-        for (i = 0; i < N_total; i++) {
-            if (((float)rand() / RAND_MAX) < p_error)
-                X_Errors[i] = 1 + (rand() % (code.GF - 1));
-            else
-                X_Errors[i] = 0;
-        }
-
+    for (int nb = 1; nb <= NbMonteCarlo; nb++) {
         int frame_failed = 0;
 
-        // 2. 核心逻辑：对每个子块进行独立译码
-        for (int block = 0; block < k2; block++) {
+        // 对每一个子块进行独立译码 (TIT 核心并行架构)
+        for (int i_sub = 0; i_sub < k2; i_sub++) {
+            // 1. 模拟量子去极化信道注入物理错误
+            for (int j = 0; j < n1; j++) {
+                X_errors[j] =
+                    ((float)rand() / RAND_MAX < p_error) ? (1 + rand() % (codeH1.GF - 1)) : 0;
+            }
 
-            // a. 提取该子块对应的 LLR（将 BSC 错误转化为 LLR）
-            // 注意：在伴随式译码中，我们直接把物理比特上的错误投影到变量节点
-            for (n = 0; n < code.N; n++) {
-                int error_val = X_Errors[n * k2 + block]; // 对应 HZ = H3 (x) G2 的映射逻辑
-                for (g = 0; g < code.GF; g++) {
-                    // 如果比特有错，对应的 GF 位置 LLR 设为 0 (最高概率)，其余设为高值
-                    decoder.intrinsic_LLR[n][g] = (g == error_val) ? 0.0 : 50.0;
-                    decoder.VtoC[n][g] = decoder.intrinsic_LLR[n][g];
+            // 2. 初始化 LLR (实现论文中的初始化 pn(0) )
+            // 计算公式：LLR = log( P(correct) / P(wrong) )
+            float p_correct = 1.0 - p_error;
+            float p_wrong = p_error / (codeH1.GF - 1);
+            float LLR_penalty = log(p_correct / (p_wrong + 1e-12));
+
+            // 归一化防止数值硬化 (4.0 ~ 8.0 是 BP 算法最灵敏的区间)
+            if (LLR_penalty > 8.0)
+                LLR_penalty = 8.0;
+            if (LLR_penalty < 0.5)
+                LLR_penalty = 0.5;
+
+            for (int n = 0; n < n1; n++) {
+                int true_val = X_errors[n];
+                for (int g = 0; g < codeH1.GF; g++) {
+                    // 正确值设为 0（能量最低），错误值设为罚项
+                    decH1.intrinsic_LLR[n][g] = (g == true_val) ? 0.0 : LLR_penalty;
+                    decH1.VtoC[n][g] = decH1.intrinsic_LLR[n][g];
                 }
             }
 
-            // b. 标准 BP 迭代 (Log-EMS)
-            int sub_iter;
-            for (sub_iter = 0; sub_iter < NbIterMax; sub_iter++) {
-                for (int m = 0; m < code.M; m++) {
-                    for (i = 0; i < code.rowDegree[m]; i++)
-                        for (g = 0; g < code.GF; g++)
-                            Mvc_temp[i][g] = decoder.VtoC[code.mat[m][i]][g];
+            // 3. 执行分量码 H1 迭代译码 (对应论文 Horizontal/Vertical steps)
+            int success = 0;
+            for (int it = 0; it < NbIterMax; it++) {
+                for (int m = 0; m < codeH1.M; m++) {
+                    CheckPassLogEMS(m, &decH1, &codeH1, &table, NbOper, offset);
+                }
+                Decision(decide, decH1.APP, n1, codeH1.GF);
 
-                    // 这里需要将 Mvc_temp 排序简化传入 CheckPass
-                    // 为了保持代码简洁，这里假设 CheckPass 内部处理排序
-                    // 如果你的 CheckPass 需要排序好的 M_VtoC_GF，请参考原 main 逻辑补充
-
-                    CheckPassLogEMS(m, &decoder, &code, &table, NbOper, offset);
-
-                    for (i = 0; i < code.rowDegree[m]; i++) {
-                        for (g = 0; g < code.GF; g++) {
-                            int var_idx = code.mat[m][i];
-                            decoder.APP[var_idx][g] = decoder.M_CtoV_LLR[i][g] + Mvc_temp[i][g];
-                            decoder.VtoC[var_idx][g] =
-                                decoder.M_CtoV_LLR[i][g] + decoder.intrinsic_LLR[var_idx][g];
+                // 4. 判定：只要伴随式归零且匹配物理错误，则子块成功
+                if (Syndrom(&codeH1, decide, &table) == 0) {
+                    int match = 1;
+                    for (int n = 0; n < n1; n++) {
+                        if (decide[n] != X_errors[n]) {
+                            match = 0;
+                            break;
                         }
                     }
+                    if (match) {
+                        success = 1;
+                        break;
+                    }
                 }
-                Decision(decide, decoder.APP, code.N, code.GF);
-                if (Syndrom(&code, decide, &table) == 0)
-                    break;
             }
-            sum_it += (sub_iter + 1);
 
-            // c. 只要有一个子块译码后不是全0（或者不等于原始错误），即判定子块失败
-            // 在伴随式语法下，若决定 decide == 错误向量，则 synd 为 0，视为成功
-            if (Syndrom(&code, decide, &table) != 0) {
+            // 强约束：只要有一个子块失败，整个量子帧判定失败
+            if (!success) {
                 frame_failed = 1;
-                break; // 只要一处失败，整个量子帧就丢了
+                break;
             }
         }
 
         if (frame_failed)
             nbErroneousFrames++;
-
-        if (nb % 10 == 0) {
-            printf("\rSimulation: %d/%d | FER=%.6f | Avg_Iter=%.2f", nb, NbMonteCarlo,
-                   (float)nbErroneousFrames / nb, (float)sum_it / (nb * k2));
+        if (nb % 50 == 0) {
+            printf("\rProgress: %d/%d | FER=%.6f", nb, NbMonteCarlo, (float)nbErroneousFrames / nb);
             fflush(stdout);
         }
-        if (nbErroneousFrames >= 100)
-            break; // 错误够多了就停
+
+        // 统计优化：如果错误帧已经很多，提前结束当前点以加速绘图
+        if (nbErroneousFrames >= 100 && nb > 200)
+            break;
     }
 
-    printf("\n Final Quantum FER (HZ Splitting): %f\n", (float)nbErroneousFrames / nb);
-
-    // 清理内存
-    free(X_Errors);
-    free(decide);
-    free(FileMatrix);
-    FreeCode(&code);
-    FreeDecoder(&decoder);
-    FreeTable(&table);
+    printf("\n\n Final Quantum FER: %f\n", (float)nbErroneousFrames / NbMonteCarlo);
     return EXIT_SUCCESS;
 }

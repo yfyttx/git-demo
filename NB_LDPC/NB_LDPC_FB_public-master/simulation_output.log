@@ -1,0 +1,183 @@
+nohup: ignoring input
+rm -f obj/*.o essai
+gcc -O3 -Wall -Iinclude/ -c init.c -o obj/init.o
+init.c: In function ‘AllocateDecoder’:
+init.c:295:16: warning: unused variable ‘nbCol’ [-Wunused-variable]
+  295 |     int nbRow, nbCol, k;
+      |                ^~~~~
+init.c: In function ‘LoadCode’:
+init.c:181:5: warning: ignoring return value of ‘fscanf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  181 |     fscanf(f, "%d", &N);
+      |     ^~~~~~~~~~~~~~~~~~~
+init.c:182:5: warning: ignoring return value of ‘fscanf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  182 |     fscanf(f, "%d", &M);
+      |     ^~~~~~~~~~~~~~~~~~~
+init.c:183:5: warning: ignoring return value of ‘fscanf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  183 |     fscanf(f, "%d", &GF);
+      |     ^~~~~~~~~~~~~~~~~~~~
+init.c:199:9: warning: ignoring return value of ‘fscanf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  199 |         fscanf(f, "%d", &code->columnDegree[n]);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+init.c:204:9: warning: ignoring return value of ‘fscanf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  204 |         fscanf(f, "%d", &code->rowDegree[m]);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+init.c:242:13: warning: ignoring return value of ‘fscanf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  242 |             fscanf(f, "%d", &temp_int);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+init.c:244:13: warning: ignoring return value of ‘fscanf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  244 |             fscanf(f, "%d", &temp_int);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+gcc -O3 -Wall -Iinclude/ -c tools.c -o obj/tools.o
+gcc -O3 -Wall -Iinclude/ -c channel.c -o obj/channel.o
+gcc -O3 -Wall -Iinclude/ -c bubble_decoder.c -o obj/bubble_decoder.o
+bubble_decoder.c: In function ‘CheckPassLogEMS’:
+bubble_decoder.c:167:23: warning: ‘Stp’ may be used uninitialized [-Wmaybe-uninitialized]
+  167 |         for (k = 0; k < Stp; k++) {
+      |                     ~~^~~~~
+bubble_decoder.c:46:32: note: ‘Stp’ was declared here
+   46 |     int t, k, g, kk, S, c, k1, Stp;
+      |                                ^~~
+bubble_decoder.c: In function ‘CheckPassLogEMS_dc3’:
+bubble_decoder.c:237:23: warning: ‘Stp’ may be used uninitialized [-Wmaybe-uninitialized]
+  237 |         for (k = 0; k < Stp; k++) {
+      |                     ~~^~~~~
+bubble_decoder.c:205:18: note: ‘Stp’ was declared here
+  205 |     int t, c, k, Stp;
+      |                  ^~~
+gcc -O3 -Wall -Iinclude/ -c NB_LDPC.c -o obj/NB_LDPC.o
+In file included from NB_LDPC.c:13:
+./include/NB_LDPC.h:20:13: warning: ‘usage_txt’ defined but not used [-Wunused-variable]
+   20 | static char usage_txt[] =
+      |             ^~~~~~~~~
+gcc -O3 -Wall -o essai obj/init.o obj/tools.o obj/channel.o obj/bubble_decoder.o obj/NB_LDPC.o -lm
+ === Quantum TIT Fully-Connected Syndrome-Splitting Decoder === 
+Loading H1: ../../build/H1_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:217 
+ 	 K 	:124 
+ 	 M	:93 
+ 	 CR	:0.571429 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Loading H2: ../../build/H2_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:90 
+ 	 K 	:60 
+ 	 M	:30 
+ 	 CR	:0.666667 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Matrix E Size: 217 x 90 (Total 19530 Qubits)
+Parallel Architecture: 90 parallel H1 decoders + 217 parallel H2 decoders
+Simulation: 10/1000 | FER=0.000000Simulation: 20/1000 | FER=0.000000Simulation: 30/1000 | FER=0.000000Simulation: 40/1000 | FER=0.000000Simulation: 50/1000 | FER=0.000000Simulation: 60/1000 | FER=0.000000Simulation: 70/1000 | FER=0.000000Simulation: 80/1000 | FER=0.000000Simulation: 90/1000 | FER=0.000000Simulation: 100/1000 | FER=0.000000Simulation: 110/1000 | FER=0.000000Simulation: 120/1000 | FER=0.000000Simulation: 130/1000 | FER=0.000000Simulation: 140/1000 | FER=0.000000Simulation: 150/1000 | FER=0.000000Simulation: 160/1000 | FER=0.000000Simulation: 170/1000 | FER=0.000000Simulation: 180/1000 | FER=0.000000Simulation: 190/1000 | FER=0.000000Simulation: 200/1000 | FER=0.000000Simulation: 210/1000 | FER=0.000000Simulation: 220/1000 | FER=0.000000Simulation: 230/1000 | FER=0.000000Simulation: 240/1000 | FER=0.000000Simulation: 250/1000 | FER=0.000000Simulation: 260/1000 | FER=0.000000Simulation: 270/1000 | FER=0.000000Simulation: 280/1000 | FER=0.000000Simulation: 290/1000 | FER=0.000000Simulation: 300/1000 | FER=0.000000Simulation: 310/1000 | FER=0.000000Simulation: 320/1000 | FER=0.000000Simulation: 330/1000 | FER=0.000000Simulation: 340/1000 | FER=0.000000Simulation: 350/1000 | FER=0.000000Simulation: 360/1000 | FER=0.000000Simulation: 370/1000 | FER=0.000000Simulation: 380/1000 | FER=0.000000Simulation: 390/1000 | FER=0.000000Simulation: 400/1000 | FER=0.000000Simulation: 410/1000 | FER=0.000000Simulation: 420/1000 | FER=0.000000Simulation: 430/1000 | FER=0.000000Simulation: 440/1000 | FER=0.000000Simulation: 450/1000 | FER=0.000000Simulation: 460/1000 | FER=0.000000Simulation: 470/1000 | FER=0.000000Simulation: 480/1000 | FER=0.000000Simulation: 490/1000 | FER=0.000000Simulation: 500/1000 | FER=0.000000Simulation: 510/1000 | FER=0.000000Simulation: 520/1000 | FER=0.000000Simulation: 530/1000 | FER=0.000000Simulation: 540/1000 | FER=0.000000Simulation: 550/1000 | FER=0.000000Simulation: 560/1000 | FER=0.000000Simulation: 570/1000 | FER=0.000000Simulation: 580/1000 | FER=0.000000Simulation: 590/1000 | FER=0.000000Simulation: 600/1000 | FER=0.000000Simulation: 610/1000 | FER=0.000000Simulation: 620/1000 | FER=0.000000Simulation: 630/1000 | FER=0.000000Simulation: 640/1000 | FER=0.000000Simulation: 650/1000 | FER=0.000000Simulation: 660/1000 | FER=0.000000Simulation: 670/1000 | FER=0.000000Simulation: 680/1000 | FER=0.000000Simulation: 690/1000 | FER=0.000000Simulation: 700/1000 | FER=0.000000Simulation: 710/1000 | FER=0.000000Simulation: 720/1000 | FER=0.000000Simulation: 730/1000 | FER=0.000000Simulation: 740/1000 | FER=0.000000Simulation: 750/1000 | FER=0.000000Simulation: 760/1000 | FER=0.000000Simulation: 770/1000 | FER=0.000000Simulation: 780/1000 | FER=0.000000Simulation: 790/1000 | FER=0.000000Simulation: 800/1000 | FER=0.000000Simulation: 810/1000 | FER=0.000000Simulation: 820/1000 | FER=0.000000Simulation: 830/1000 | FER=0.000000Simulation: 840/1000 | FER=0.000000Simulation: 850/1000 | FER=0.000000Simulation: 860/1000 | FER=0.000000Simulation: 870/1000 | FER=0.000000Simulation: 880/1000 | FER=0.000000Simulation: 890/1000 | FER=0.000000Simulation: 900/1000 | FER=0.000000Simulation: 910/1000 | FER=0.000000Simulation: 920/1000 | FER=0.000000Simulation: 930/1000 | FER=0.000000Simulation: 940/1000 | FER=0.000000Simulation: 950/1000 | FER=0.000000Simulation: 960/1000 | FER=0.000000Simulation: 970/1000 | FER=0.000000Simulation: 980/1000 | FER=0.000000Simulation: 990/1000 | FER=0.000000Simulation: 1000/1000 | FER=0.000000Segmentation fault (core dumped)
+ === Quantum TIT Fully-Connected Syndrome-Splitting Decoder === 
+Loading H1: ../../build/H1_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:217 
+ 	 K 	:124 
+ 	 M	:93 
+ 	 CR	:0.571429 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Loading H2: ../../build/H2_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:90 
+ 	 K 	:60 
+ 	 M	:30 
+ 	 CR	:0.666667 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Matrix E Size: 217 x 90 (Total 19530 Qubits)
+Parallel Architecture: 90 parallel H1 decoders + 217 parallel H2 decoders
+Simulation: 10/1000 | FER=0.000000Simulation: 20/1000 | FER=0.000000Simulation: 30/1000 | FER=0.000000Simulation: 40/1000 | FER=0.000000Simulation: 50/1000 | FER=0.000000Simulation: 60/1000 | FER=0.000000Simulation: 70/1000 | FER=0.000000Simulation: 80/1000 | FER=0.000000Simulation: 90/1000 | FER=0.000000Simulation: 100/1000 | FER=0.000000Simulation: 110/1000 | FER=0.000000Simulation: 120/1000 | FER=0.000000Simulation: 130/1000 | FER=0.000000Simulation: 140/1000 | FER=0.000000Simulation: 150/1000 | FER=0.000000Simulation: 160/1000 | FER=0.000000Simulation: 170/1000 | FER=0.000000Simulation: 180/1000 | FER=0.000000Simulation: 190/1000 | FER=0.000000Simulation: 200/1000 | FER=0.000000Simulation: 210/1000 | FER=0.000000Simulation: 220/1000 | FER=0.000000Simulation: 230/1000 | FER=0.000000Simulation: 240/1000 | FER=0.000000Simulation: 250/1000 | FER=0.000000Simulation: 260/1000 | FER=0.000000Simulation: 270/1000 | FER=0.000000Simulation: 280/1000 | FER=0.000000Simulation: 290/1000 | FER=0.000000Simulation: 300/1000 | FER=0.000000Simulation: 310/1000 | FER=0.000000Simulation: 320/1000 | FER=0.000000Simulation: 330/1000 | FER=0.000000Simulation: 340/1000 | FER=0.000000Simulation: 350/1000 | FER=0.000000Simulation: 360/1000 | FER=0.000000Simulation: 370/1000 | FER=0.000000Simulation: 380/1000 | FER=0.000000Simulation: 390/1000 | FER=0.000000Simulation: 400/1000 | FER=0.000000Simulation: 410/1000 | FER=0.000000Simulation: 420/1000 | FER=0.000000Simulation: 430/1000 | FER=0.000000Simulation: 440/1000 | FER=0.000000Simulation: 450/1000 | FER=0.000000Simulation: 460/1000 | FER=0.000000Simulation: 470/1000 | FER=0.000000Simulation: 480/1000 | FER=0.000000Simulation: 490/1000 | FER=0.000000Simulation: 500/1000 | FER=0.000000Simulation: 510/1000 | FER=0.000000Simulation: 520/1000 | FER=0.000000Simulation: 530/1000 | FER=0.000000Simulation: 540/1000 | FER=0.000000Simulation: 550/1000 | FER=0.000000Simulation: 560/1000 | FER=0.000000Simulation: 570/1000 | FER=0.000000Simulation: 580/1000 | FER=0.000000Simulation: 590/1000 | FER=0.000000Simulation: 600/1000 | FER=0.000000Simulation: 610/1000 | FER=0.000000Simulation: 620/1000 | FER=0.000000Simulation: 630/1000 | FER=0.000000Simulation: 640/1000 | FER=0.000000Simulation: 650/1000 | FER=0.000000Simulation: 660/1000 | FER=0.000000Simulation: 670/1000 | FER=0.000000Simulation: 680/1000 | FER=0.000000Simulation: 690/1000 | FER=0.000000Simulation: 700/1000 | FER=0.000000Simulation: 710/1000 | FER=0.000000Simulation: 720/1000 | FER=0.000000Simulation: 730/1000 | FER=0.000000Simulation: 740/1000 | FER=0.000000Simulation: 750/1000 | FER=0.000000Simulation: 760/1000 | FER=0.000000Simulation: 770/1000 | FER=0.000000Simulation: 780/1000 | FER=0.000000Simulation: 790/1000 | FER=0.000000Simulation: 800/1000 | FER=0.000000Simulation: 810/1000 | FER=0.000000Simulation: 820/1000 | FER=0.000000Simulation: 830/1000 | FER=0.000000Simulation: 840/1000 | FER=0.000000Simulation: 850/1000 | FER=0.000000Simulation: 860/1000 | FER=0.000000Simulation: 870/1000 | FER=0.000000Simulation: 880/1000 | FER=0.000000Simulation: 890/1000 | FER=0.000000Simulation: 900/1000 | FER=0.000000Simulation: 910/1000 | FER=0.000000Simulation: 920/1000 | FER=0.000000Simulation: 930/1000 | FER=0.000000Simulation: 940/1000 | FER=0.000000Simulation: 950/1000 | FER=0.000000Simulation: 960/1000 | FER=0.000000Simulation: 970/1000 | FER=0.000000Simulation: 980/1000 | FER=0.000000Simulation: 990/1000 | FER=0.000000Simulation: 1000/1000 | FER=0.000000Segmentation fault (core dumped)
+ === Quantum TIT Fully-Connected Syndrome-Splitting Decoder === 
+Loading H1: ../../build/H1_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:217 
+ 	 K 	:124 
+ 	 M	:93 
+ 	 CR	:0.571429 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Loading H2: ../../build/H2_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:90 
+ 	 K 	:60 
+ 	 M	:30 
+ 	 CR	:0.666667 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Matrix E Size: 217 x 90 (Total 19530 Qubits)
+Parallel Architecture: 90 parallel H1 decoders + 217 parallel H2 decoders
+Simulation: 10/1000 | FER=0.000000Simulation: 20/1000 | FER=0.000000Simulation: 30/1000 | FER=0.000000Simulation: 40/1000 | FER=0.000000Simulation: 50/1000 | FER=0.000000Simulation: 60/1000 | FER=0.000000Simulation: 70/1000 | FER=0.000000Simulation: 80/1000 | FER=0.000000Simulation: 90/1000 | FER=0.000000Simulation: 100/1000 | FER=0.000000Simulation: 110/1000 | FER=0.000000Simulation: 120/1000 | FER=0.000000Simulation: 130/1000 | FER=0.000000Simulation: 140/1000 | FER=0.000000Simulation: 150/1000 | FER=0.000000Simulation: 160/1000 | FER=0.000000Simulation: 170/1000 | FER=0.000000Simulation: 180/1000 | FER=0.000000Simulation: 190/1000 | FER=0.000000Simulation: 200/1000 | FER=0.000000Simulation: 210/1000 | FER=0.000000Simulation: 220/1000 | FER=0.000000Simulation: 230/1000 | FER=0.000000Simulation: 240/1000 | FER=0.000000Simulation: 250/1000 | FER=0.000000Simulation: 260/1000 | FER=0.000000Simulation: 270/1000 | FER=0.000000Simulation: 280/1000 | FER=0.000000Simulation: 290/1000 | FER=0.000000Simulation: 300/1000 | FER=0.000000Simulation: 310/1000 | FER=0.000000Simulation: 320/1000 | FER=0.000000Simulation: 330/1000 | FER=0.000000Simulation: 340/1000 | FER=0.000000Simulation: 350/1000 | FER=0.000000Simulation: 360/1000 | FER=0.000000Simulation: 370/1000 | FER=0.000000Simulation: 380/1000 | FER=0.000000Simulation: 390/1000 | FER=0.000000Simulation: 400/1000 | FER=0.000000Simulation: 410/1000 | FER=0.000000Simulation: 420/1000 | FER=0.000000Simulation: 430/1000 | FER=0.000000Simulation: 440/1000 | FER=0.000000Simulation: 450/1000 | FER=0.000000Simulation: 460/1000 | FER=0.000000Simulation: 470/1000 | FER=0.000000Simulation: 480/1000 | FER=0.000000Simulation: 490/1000 | FER=0.000000Simulation: 500/1000 | FER=0.000000Simulation: 510/1000 | FER=0.000000Simulation: 520/1000 | FER=0.000000Simulation: 530/1000 | FER=0.000000Simulation: 540/1000 | FER=0.000000Simulation: 550/1000 | FER=0.000000Simulation: 560/1000 | FER=0.000000Simulation: 570/1000 | FER=0.000000Simulation: 580/1000 | FER=0.000000Simulation: 590/1000 | FER=0.000000Simulation: 600/1000 | FER=0.000000Simulation: 610/1000 | FER=0.000000Simulation: 620/1000 | FER=0.000000Simulation: 630/1000 | FER=0.000000Simulation: 640/1000 | FER=0.000000Simulation: 650/1000 | FER=0.000000Simulation: 660/1000 | FER=0.000000Simulation: 670/1000 | FER=0.000000Simulation: 680/1000 | FER=0.000000Simulation: 690/1000 | FER=0.000000Simulation: 700/1000 | FER=0.000000Simulation: 710/1000 | FER=0.000000Simulation: 720/1000 | FER=0.000000Simulation: 730/1000 | FER=0.000000Simulation: 740/1000 | FER=0.000000Simulation: 750/1000 | FER=0.000000Simulation: 760/1000 | FER=0.000000Simulation: 770/1000 | FER=0.000000Simulation: 780/1000 | FER=0.000000Simulation: 790/1000 | FER=0.000000Simulation: 800/1000 | FER=0.000000Simulation: 810/1000 | FER=0.000000Simulation: 820/1000 | FER=0.000000Simulation: 830/1000 | FER=0.000000Simulation: 840/1000 | FER=0.000000Simulation: 850/1000 | FER=0.000000Simulation: 860/1000 | FER=0.000000Simulation: 870/1000 | FER=0.000000Simulation: 880/1000 | FER=0.000000Simulation: 890/1000 | FER=0.000000Simulation: 900/1000 | FER=0.000000Simulation: 910/1000 | FER=0.000000Simulation: 920/1000 | FER=0.000000Simulation: 930/1000 | FER=0.000000Simulation: 940/1000 | FER=0.000000Simulation: 950/1000 | FER=0.000000Simulation: 960/1000 | FER=0.000000Simulation: 970/1000 | FER=0.000000Simulation: 980/1000 | FER=0.000000Simulation: 990/1000 | FER=0.000000Simulation: 1000/1000 | FER=0.000000Segmentation fault (core dumped)
+ === Quantum TIT Fully-Connected Syndrome-Splitting Decoder === 
+Loading H1: ../../build/H1_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:217 
+ 	 K 	:124 
+ 	 M	:93 
+ 	 CR	:0.571429 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Loading H2: ../../build/H2_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:90 
+ 	 K 	:60 
+ 	 M	:30 
+ 	 CR	:0.666667 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Matrix E Size: 217 x 90 (Total 19530 Qubits)
+Parallel Architecture: 90 parallel H1 decoders + 217 parallel H2 decoders
+Simulation: 10/1000 | FER=0.000000Simulation: 20/1000 | FER=0.000000Simulation: 30/1000 | FER=0.000000Simulation: 40/1000 | FER=0.000000Simulation: 50/1000 | FER=0.000000Simulation: 60/1000 | FER=0.000000Simulation: 70/1000 | FER=0.000000Simulation: 80/1000 | FER=0.000000Simulation: 90/1000 | FER=0.000000Simulation: 100/1000 | FER=0.000000Simulation: 110/1000 | FER=0.000000Simulation: 120/1000 | FER=0.000000Simulation: 130/1000 | FER=0.000000Simulation: 140/1000 | FER=0.000000Simulation: 150/1000 | FER=0.000000Simulation: 160/1000 | FER=0.000000Simulation: 170/1000 | FER=0.000000Simulation: 180/1000 | FER=0.000000Simulation: 190/1000 | FER=0.000000Simulation: 200/1000 | FER=0.000000Simulation: 210/1000 | FER=0.000000Simulation: 220/1000 | FER=0.000000Simulation: 230/1000 | FER=0.000000Simulation: 240/1000 | FER=0.000000Simulation: 250/1000 | FER=0.000000Simulation: 260/1000 | FER=0.000000Simulation: 270/1000 | FER=0.000000Simulation: 280/1000 | FER=0.000000Simulation: 290/1000 | FER=0.000000Simulation: 300/1000 | FER=0.000000Simulation: 310/1000 | FER=0.000000Simulation: 320/1000 | FER=0.000000Simulation: 330/1000 | FER=0.000000Simulation: 340/1000 | FER=0.000000Simulation: 350/1000 | FER=0.000000Simulation: 360/1000 | FER=0.000000Simulation: 370/1000 | FER=0.000000Simulation: 380/1000 | FER=0.000000Simulation: 390/1000 | FER=0.000000Simulation: 400/1000 | FER=0.000000Simulation: 410/1000 | FER=0.000000Simulation: 420/1000 | FER=0.000000Simulation: 430/1000 | FER=0.000000Simulation: 440/1000 | FER=0.000000Simulation: 450/1000 | FER=0.000000Simulation: 460/1000 | FER=0.000000Simulation: 470/1000 | FER=0.000000Simulation: 480/1000 | FER=0.000000Simulation: 490/1000 | FER=0.000000Simulation: 500/1000 | FER=0.000000Simulation: 510/1000 | FER=0.000000Simulation: 520/1000 | FER=0.000000Simulation: 530/1000 | FER=0.000000Simulation: 540/1000 | FER=0.000000Simulation: 550/1000 | FER=0.000000Simulation: 560/1000 | FER=0.000000Simulation: 570/1000 | FER=0.000000Simulation: 580/1000 | FER=0.000000Simulation: 590/1000 | FER=0.000000Simulation: 600/1000 | FER=0.000000Simulation: 610/1000 | FER=0.000000Simulation: 620/1000 | FER=0.000000Simulation: 630/1000 | FER=0.000000Simulation: 640/1000 | FER=0.000000Simulation: 650/1000 | FER=0.000000Simulation: 660/1000 | FER=0.000000Simulation: 670/1000 | FER=0.000000Simulation: 680/1000 | FER=0.000000Simulation: 690/1000 | FER=0.000000Simulation: 700/1000 | FER=0.000000Simulation: 710/1000 | FER=0.000000Simulation: 720/1000 | FER=0.000000Simulation: 730/1000 | FER=0.000000Simulation: 740/1000 | FER=0.000000Simulation: 750/1000 | FER=0.000000Simulation: 760/1000 | FER=0.000000Simulation: 770/1000 | FER=0.000000Simulation: 780/1000 | FER=0.000000Simulation: 790/1000 | FER=0.000000Simulation: 800/1000 | FER=0.000000Simulation: 810/1000 | FER=0.000000Simulation: 820/1000 | FER=0.000000Simulation: 830/1000 | FER=0.000000Simulation: 840/1000 | FER=0.000000Simulation: 850/1000 | FER=0.000000Simulation: 860/1000 | FER=0.000000Simulation: 870/1000 | FER=0.000000Simulation: 880/1000 | FER=0.000000Simulation: 890/1000 | FER=0.000000Simulation: 900/1000 | FER=0.000000Simulation: 910/1000 | FER=0.000000Simulation: 920/1000 | FER=0.000000Simulation: 930/1000 | FER=0.000000Simulation: 940/1000 | FER=0.000000Simulation: 950/1000 | FER=0.000000Simulation: 960/1000 | FER=0.000000Simulation: 970/1000 | FER=0.000000Simulation: 980/1000 | FER=0.000000Simulation: 990/1000 | FER=0.000000Simulation: 1000/1000 | FER=0.000000Segmentation fault (core dumped)
+ === Quantum TIT Fully-Connected Syndrome-Splitting Decoder === 
+Loading H1: ../../build/H1_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:217 
+ 	 K 	:124 
+ 	 M	:93 
+ 	 CR	:0.571429 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Loading H2: ../../build/H2_sparse.txt
+ 
+ Normal alist format is used! 
+LDPC code parameters: 
+ 	 N 	:90 
+ 	 K 	:60 
+ 	 M	:30 
+ 	 CR	:0.666667 
+ 	 GF 	:64 
+ 	 logGF 	:6
+Matrix E Size: 217 x 90 (Total 19530 Qubits)
+Parallel Architecture: 90 parallel H1 decoders + 217 parallel H2 decoders
+Simulation: 10/1000 | FER=0.000000Simulation: 20/1000 | FER=0.000000Simulation: 30/1000 | FER=0.000000Simulation: 40/1000 | FER=0.000000Simulation: 50/1000 | FER=0.000000Simulation: 60/1000 | FER=0.000000Simulation: 70/1000 | FER=0.000000Simulation: 80/1000 | FER=0.000000Simulation: 90/1000 | FER=0.000000Simulation: 100/1000 | FER=0.000000Simulation: 110/1000 | FER=0.000000Simulation: 120/1000 | FER=0.000000Simulation: 130/1000 | FER=0.000000Simulation: 140/1000 | FER=0.000000Simulation: 150/1000 | FER=0.000000Simulation: 160/1000 | FER=0.000000Simulation: 170/1000 | FER=0.000000Simulation: 180/1000 | FER=0.000000Simulation: 190/1000 | FER=0.000000Simulation: 200/1000 | FER=0.000000Simulation: 210/1000 | FER=0.000000Simulation: 220/1000 | FER=0.000000Simulation: 230/1000 | FER=0.000000Simulation: 240/1000 | FER=0.000000Simulation: 250/1000 | FER=0.000000Simulation: 260/1000 | FER=0.000000Simulation: 270/1000 | FER=0.000000Simulation: 280/1000 | FER=0.000000Simulation: 290/1000 | FER=0.000000Simulation: 300/1000 | FER=0.000000Simulation: 310/1000 | FER=0.000000Simulation: 320/1000 | FER=0.000000Simulation: 330/1000 | FER=0.000000Simulation: 340/1000 | FER=0.000000Simulation: 350/1000 | FER=0.000000Simulation: 360/1000 | FER=0.000000Simulation: 370/1000 | FER=0.000000Simulation: 380/1000 | FER=0.000000Simulation: 390/1000 | FER=0.000000Simulation: 400/1000 | FER=0.000000Simulation: 410/1000 | FER=0.000000Simulation: 420/1000 | FER=0.000000Simulation: 430/1000 | FER=0.000000Simulation: 440/1000 | FER=0.000000Simulation: 450/1000 | FER=0.000000Simulation: 460/1000 | FER=0.000000Simulation: 470/1000 | FER=0.000000Simulation: 480/1000 | FER=0.000000Simulation: 490/1000 | FER=0.000000Simulation: 500/1000 | FER=0.000000Simulation: 510/1000 | FER=0.000000Simulation: 520/1000 | FER=0.000000Simulation: 530/1000 | FER=0.000000Simulation: 540/1000 | FER=0.000000Simulation: 550/1000 | FER=0.000000Simulation: 560/1000 | FER=0.000000Simulation: 570/1000 | FER=0.000000Simulation: 580/1000 | FER=0.000000Simulation: 590/1000 | FER=0.000000Simulation: 600/1000 | FER=0.000000Simulation: 610/1000 | FER=0.000000Simulation: 620/1000 | FER=0.000000Simulation: 630/1000 | FER=0.000000Simulation: 640/1000 | FER=0.000000Simulation: 650/1000 | FER=0.000000Simulation: 660/1000 | FER=0.000000Simulation: 670/1000 | FER=0.000000Simulation: 680/1000 | FER=0.000000Simulation: 690/1000 | FER=0.000000Simulation: 700/1000 | FER=0.000000Simulation: 710/1000 | FER=0.000000Simulation: 720/1000 | FER=0.000000Simulation: 730/1000 | FER=0.000000Simulation: 740/1000 | FER=0.000000Simulation: 750/1000 | FER=0.000000Simulation: 760/1000 | FER=0.000000Simulation: 770/1000 | FER=0.000000Simulation: 780/1000 | FER=0.000000Simulation: 790/1000 | FER=0.000000Simulation: 800/1000 | FER=0.000000Simulation: 810/1000 | FER=0.000000Simulation: 820/1000 | FER=0.000000Simulation: 830/1000 | FER=0.000000Simulation: 840/1000 | FER=0.000000Simulation: 850/1000 | FER=0.000000Simulation: 860/1000 | FER=0.000000Simulation: 870/1000 | FER=0.000000Simulation: 880/1000 | FER=0.000000Simulation: 890/1000 | FER=0.000000Simulation: 900/1000 | FER=0.000000Simulation: 910/1000 | FER=0.000000Simulation: 920/1000 | FER=0.000000Simulation: 930/1000 | FER=0.000000Simulation: 940/1000 | FER=0.000000Simulation: 950/1000 | FER=0.000000Simulation: 960/1000 | FER=0.000000Simulation: 970/1000 | FER=0.000000Simulation: 980/1000 | FER=0.000000Simulation: 990/1000 | FER=0.000000Simulation: 1000/1000 | FER=0.000000Segmentation fault (core dumped)
+Compiling TIT Splitting Decoder...
+
+[Running] ./essai 1000 50 ../../build/H1_sparse.txt ../../build/H2_sparse.txt 0.01 0.5 50
+
+[Running] ./essai 1000 50 ../../build/H1_sparse.txt ../../build/H2_sparse.txt 0.005 0.5 50
+
+[Running] ./essai 1000 50 ../../build/H1_sparse.txt ../../build/H2_sparse.txt 0.001 0.5 50
+
+[Running] ./essai 1000 50 ../../build/H1_sparse.txt ../../build/H2_sparse.txt 0.0005 0.5 50
+
+[Running] ./essai 1000 50 ../../build/H1_sparse.txt ../../build/H2_sparse.txt 0.0001 0.5 50

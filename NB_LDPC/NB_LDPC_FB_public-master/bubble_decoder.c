@@ -43,7 +43,8 @@ int minimum(float *Y, int nl) {
 void CheckPassLogEMS(int node, decoder_t *decoder, code_t *code, table_t *table, int NbOper,
                      float offset) {
     const int nbMax = decoder->n_vc;
-    int t, k, g, kk, S, c, k1, Stp;
+    // [修改点 1]：初始化 Stp 为 0，彻底杜绝未初始化警告
+    int t, k, g, kk, S, c, k1, Stp = 0;
     int **MatriceInterIndice, *OutForwardIndice, *OutBackwardIndice, *OutForwardIndice1,
         *OutBackwardIndice1;
     float **MatriceInter, *OutForward, *OutBackward, *OutForward1, *OutBackward1;
@@ -94,8 +95,6 @@ void CheckPassLogEMS(int node, decoder_t *decoder, code_t *code, table_t *table,
                 c = table->MULDEC[c][code->matValue[node][t]];
                 decoder->M_VtoC_GF[t][k] = c;
             }
-            // else printf("M_VtoC_GF[%d][%d]=%d\n",t,k,decoder->M_VtoC_GF[t][k]); // Commented out
-            // noise
         }
     }
 
@@ -156,12 +155,13 @@ void CheckPassLogEMS(int node, decoder_t *decoder, code_t *code, table_t *table,
 
     // Rotation CtoV
     for (t = 0; t < code->rowDegree[node]; t++) {
+        // [修改点 2]：先赋安全默认值 nbMax，找到 -1 再提前中断。逻辑更清晰，避免编译器误判。
+        Stp = nbMax;
         for (k = 0; k < nbMax; k++) {
             if (decoder->M_CtoV_GF[t][k] == -1) {
                 Stp = k;
                 break;
-            } else
-                Stp = nbMax;
+            }
         }
 
         for (k = 0; k < Stp; k++) {
@@ -202,7 +202,8 @@ void CheckPassLogEMS_dc3(int node, decoder_t *decoder, code_t *code, table_t *ta
                          float offset) {
     const int n_vc = decoder->n_vc;
     const int n_cv = decoder->n_cv;
-    int t, c, k, Stp;
+    // [修改点 3]：初始化 Stp
+    int t, c, k, Stp = 0;
     float LLR_tmp[code->GF];
 
     for (t = 0; t < code->rowDegree[node]; t++) {
@@ -226,12 +227,13 @@ void CheckPassLogEMS_dc3(int node, decoder_t *decoder, code_t *code, table_t *ta
                       table->ADDGF, code->GF, n_vc, n_vc, n_cv, NbOper); // merge
 
     for (t = 0; t < code->rowDegree[node]; t++) {
+        // [修改点 4]：赋安全默认值 n_cv
+        Stp = n_cv;
         for (k = 0; k < n_cv; k++) {
             if (decoder->M_CtoV_GF[t][k] == -1) {
                 Stp = k;
                 break;
-            } else
-                Stp = n_cv;
+            }
         }
 
         for (k = 0; k < Stp; k++) {
@@ -310,12 +312,8 @@ int ElementaryStep(float *Input1, float *Input2, int *IndiceInput1, int *IndiceI
     for (ss = 0; ss < nbOper; ss++) {
         pos = minimum(tab_comp[0], nb_bubble);
 
-        // [修复核心]
-        // 遇到 -1 表示已经没有更多有效的组合了。
-        // 原代码在这里 printf("out of bounds") 其实是误报，这里我们直接安静地 break 即可。
         if ((IndiceInput1[(int)(tab_comp[1][pos])] == -1) ||
             (IndiceInput2[(int)(tab_comp[2][pos])] == -1)) {
-            // break 表示停止填充，剩下的 output 保持为 -1 (Init状态)，这是正常的
             break;
         }
 
@@ -411,8 +409,6 @@ int ElementaryStep_nm(float *Input1, float *Input2, int *IndiceInput1, int *Indi
     for (ss = 0; ss < nbOper; ss++) {
         pos = minimum(tab_comp[0], nb_bubble);
 
-        // [修复核心]
-        // 同样，这里遇到 -1 直接 break，不再报错。
         if ((IndiceInput1[(int)(tab_comp[1][pos])] == -1) ||
             (IndiceInput2[(int)(tab_comp[2][pos])] == -1)) {
             break;
