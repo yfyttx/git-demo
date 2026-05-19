@@ -1,5 +1,5 @@
 CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o: \
- /home/ypc/Projects/git-demo/peg-unige/BigGirth.C \
+ /home/ypc/Projects/ldpc/git-demo/peg-unige/BigGirth.C \
  /usr/include/stdc-predef.h /usr/include/c++/13/cstdio \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -163,5 +163,5 @@ CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o: \
  /usr/include/x86_64-linux-gnu/c++/13/bits/basic_file.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++io.h \
  /usr/include/c++/13/bits/fstream.tcc \
- /home/ypc/Projects/git-demo/peg-unige/BigGirth.h \
- /home/ypc/Projects/git-demo/peg-unige/Random.h
+ /home/ypc/Projects/ldpc/git-demo/peg-unige/BigGirth.h \
+ /home/ypc/Projects/ldpc/git-demo/peg-unige/Random.h

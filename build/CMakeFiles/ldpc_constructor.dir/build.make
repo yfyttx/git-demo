@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ypc/Projects/git-demo
+CMAKE_SOURCE_DIR = /home/ypc/Projects/ldpc/git-demo
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ypc/Projects/git-demo/build
+CMAKE_BINARY_DIR = /home/ypc/Projects/ldpc/git-demo/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/ldpc_constructor.dir/depend.make
@@ -70,116 +70,130 @@ include CMakeFiles/ldpc_constructor.dir/progress.make
 include CMakeFiles/ldpc_constructor.dir/flags.make
 
 CMakeFiles/ldpc_constructor.dir/src/main.cpp.o: CMakeFiles/ldpc_constructor.dir/flags.make
-CMakeFiles/ldpc_constructor.dir/src/main.cpp.o: /home/ypc/Projects/git-demo/src/main.cpp
+CMakeFiles/ldpc_constructor.dir/src/main.cpp.o: /home/ypc/Projects/ldpc/git-demo/src/main.cpp
 CMakeFiles/ldpc_constructor.dir/src/main.cpp.o: CMakeFiles/ldpc_constructor.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/main.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/main.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/main.cpp.o -c /home/ypc/Projects/git-demo/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/main.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/main.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/main.cpp.o -c /home/ypc/Projects/ldpc/git-demo/src/main.cpp
 
 CMakeFiles/ldpc_constructor.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ldpc_constructor.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/git-demo/src/main.cpp > CMakeFiles/ldpc_constructor.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/ldpc/git-demo/src/main.cpp > CMakeFiles/ldpc_constructor.dir/src/main.cpp.i
 
 CMakeFiles/ldpc_constructor.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ldpc_constructor.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/git-demo/src/main.cpp -o CMakeFiles/ldpc_constructor.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/ldpc/git-demo/src/main.cpp -o CMakeFiles/ldpc_constructor.dir/src/main.cpp.s
 
 CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o: CMakeFiles/ldpc_constructor.dir/flags.make
-CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o: /home/ypc/Projects/git-demo/src/gf2p/gf2p.cpp
+CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o: /home/ypc/Projects/ldpc/git-demo/src/gf2p/gf2p.cpp
 CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o: CMakeFiles/ldpc_constructor.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o -c /home/ypc/Projects/git-demo/src/gf2p/gf2p.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o -c /home/ypc/Projects/ldpc/git-demo/src/gf2p/gf2p.cpp
 
 CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/git-demo/src/gf2p/gf2p.cpp > CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/ldpc/git-demo/src/gf2p/gf2p.cpp > CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.i
 
 CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/git-demo/src/gf2p/gf2p.cpp -o CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/ldpc/git-demo/src/gf2p/gf2p.cpp -o CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.s
 
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o: CMakeFiles/ldpc_constructor.dir/flags.make
-CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o: /home/ypc/Projects/git-demo/src/ldpc_codes/binary_codes.cpp
+CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o: /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/binary_codes.cpp
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o: CMakeFiles/ldpc_constructor.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o -c /home/ypc/Projects/git-demo/src/ldpc_codes/binary_codes.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o -c /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/binary_codes.cpp
 
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/git-demo/src/ldpc_codes/binary_codes.cpp > CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/binary_codes.cpp > CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.i
 
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/git-demo/src/ldpc_codes/binary_codes.cpp -o CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/binary_codes.cpp -o CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.s
 
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o: CMakeFiles/ldpc_constructor.dir/flags.make
-CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o: /home/ypc/Projects/git-demo/src/ldpc_codes/nonbinary_codes.cpp
+CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o: /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/nonbinary_codes.cpp
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o: CMakeFiles/ldpc_constructor.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o -c /home/ypc/Projects/git-demo/src/ldpc_codes/nonbinary_codes.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o -c /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/nonbinary_codes.cpp
 
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/git-demo/src/ldpc_codes/nonbinary_codes.cpp > CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/nonbinary_codes.cpp > CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.i
 
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/git-demo/src/ldpc_codes/nonbinary_codes.cpp -o CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/nonbinary_codes.cpp -o CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.s
 
 CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o: CMakeFiles/ldpc_constructor.dir/flags.make
-CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o: /home/ypc/Projects/git-demo/src/utils/matrix_utils.cpp
+CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o: /home/ypc/Projects/ldpc/git-demo/src/utils/matrix_utils.cpp
 CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o: CMakeFiles/ldpc_constructor.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o -c /home/ypc/Projects/git-demo/src/utils/matrix_utils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o -c /home/ypc/Projects/ldpc/git-demo/src/utils/matrix_utils.cpp
 
 CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/git-demo/src/utils/matrix_utils.cpp > CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/ldpc/git-demo/src/utils/matrix_utils.cpp > CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.i
 
 CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/git-demo/src/utils/matrix_utils.cpp -o CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/ldpc/git-demo/src/utils/matrix_utils.cpp -o CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.s
+
+CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o: CMakeFiles/ldpc_constructor.dir/flags.make
+CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o: /home/ypc/Projects/ldpc/git-demo/src/decoder/NB_BP_Decoder.cpp
+CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o: CMakeFiles/ldpc_constructor.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o -MF CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o.d -o CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o -c /home/ypc/Projects/ldpc/git-demo/src/decoder/NB_BP_Decoder.cpp
+
+CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/ldpc/git-demo/src/decoder/NB_BP_Decoder.cpp > CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.i
+
+CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/ldpc/git-demo/src/decoder/NB_BP_Decoder.cpp -o CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.s
 
 CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o: CMakeFiles/ldpc_constructor.dir/flags.make
-CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o: /home/ypc/Projects/git-demo/peg-unige/BigGirth.C
+CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o: /home/ypc/Projects/ldpc/git-demo/peg-unige/BigGirth.C
 CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o: CMakeFiles/ldpc_constructor.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o -MF CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o.d -o CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o -c /home/ypc/Projects/git-demo/peg-unige/BigGirth.C
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o -MF CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o.d -o CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o -c /home/ypc/Projects/ldpc/git-demo/peg-unige/BigGirth.C
 
 CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/git-demo/peg-unige/BigGirth.C > CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/ldpc/git-demo/peg-unige/BigGirth.C > CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.i
 
 CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/git-demo/peg-unige/BigGirth.C -o CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/ldpc/git-demo/peg-unige/BigGirth.C -o CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.s
 
 CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o: CMakeFiles/ldpc_constructor.dir/flags.make
-CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o: /home/ypc/Projects/git-demo/peg-unige/Random.C
+CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o: /home/ypc/Projects/ldpc/git-demo/peg-unige/Random.C
 CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o: CMakeFiles/ldpc_constructor.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o -MF CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o.d -o CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o -c /home/ypc/Projects/git-demo/peg-unige/Random.C
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o -MF CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o.d -o CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o -c /home/ypc/Projects/ldpc/git-demo/peg-unige/Random.C
 
 CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/git-demo/peg-unige/Random.C > CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/ldpc/git-demo/peg-unige/Random.C > CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.i
 
 CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/git-demo/peg-unige/Random.C -o CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/ldpc/git-demo/peg-unige/Random.C -o CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.s
 
 CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o: CMakeFiles/ldpc_constructor.dir/flags.make
-CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o: /home/ypc/Projects/git-demo/peg-unige/CyclesOfGraph.C
+CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o: /home/ypc/Projects/ldpc/git-demo/peg-unige/CyclesOfGraph.C
 CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o: CMakeFiles/ldpc_constructor.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o -MF CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o.d -o CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o -c /home/ypc/Projects/git-demo/peg-unige/CyclesOfGraph.C
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o -MF CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o.d -o CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o -c /home/ypc/Projects/ldpc/git-demo/peg-unige/CyclesOfGraph.C
 
 CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/git-demo/peg-unige/CyclesOfGraph.C > CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ypc/Projects/ldpc/git-demo/peg-unige/CyclesOfGraph.C > CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.i
 
 CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/git-demo/peg-unige/CyclesOfGraph.C -o CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ypc/Projects/ldpc/git-demo/peg-unige/CyclesOfGraph.C -o CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.s
 
 # Object files for target ldpc_constructor
 ldpc_constructor_OBJECTS = \
@@ -188,6 +202,7 @@ ldpc_constructor_OBJECTS = \
 "CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o" \
 "CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o" \
 "CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o" \
+"CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o" \
 "CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o" \
 "CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o" \
 "CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o"
@@ -200,12 +215,13 @@ ldpc_constructor: CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o
 ldpc_constructor: CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o
 ldpc_constructor: CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o
 ldpc_constructor: CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o
+ldpc_constructor: CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o
 ldpc_constructor: CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o
 ldpc_constructor: CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o
 ldpc_constructor: CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o
 ldpc_constructor: CMakeFiles/ldpc_constructor.dir/build.make
 ldpc_constructor: CMakeFiles/ldpc_constructor.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ypc/Projects/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable ldpc_constructor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable ldpc_constructor"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ldpc_constructor.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -217,6 +233,6 @@ CMakeFiles/ldpc_constructor.dir/clean:
 .PHONY : CMakeFiles/ldpc_constructor.dir/clean
 
 CMakeFiles/ldpc_constructor.dir/depend:
-	cd /home/ypc/Projects/git-demo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ypc/Projects/git-demo /home/ypc/Projects/git-demo /home/ypc/Projects/git-demo/build /home/ypc/Projects/git-demo/build /home/ypc/Projects/git-demo/build/CMakeFiles/ldpc_constructor.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/ypc/Projects/ldpc/git-demo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ypc/Projects/ldpc/git-demo /home/ypc/Projects/ldpc/git-demo /home/ypc/Projects/ldpc/git-demo/build /home/ypc/Projects/ldpc/git-demo/build /home/ypc/Projects/ldpc/git-demo/build/CMakeFiles/ldpc_constructor.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/ldpc_constructor.dir/depend
 

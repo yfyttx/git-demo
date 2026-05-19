@@ -1,7 +1,7 @@
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o: \
- /home/ypc/Projects/git-demo/src/ldpc_codes/nonbinary_codes.cpp \
+ /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/nonbinary_codes.cpp \
  /usr/include/stdc-predef.h \
- /home/ypc/Projects/git-demo/include/ldpc_codes/nonbinary_codes.h \
+ /home/ypc/Projects/ldpc/git-demo/include/ldpc_codes/nonbinary_codes.h \
  /usr/include/eigen3/Eigen/Dense /usr/include/eigen3/Eigen/Core \
  /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
  /usr/include/eigen3/Eigen/src/Core/util/Macros.h \
@@ -414,7 +414,7 @@ CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o: \
  /usr/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
  /usr/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
  /usr/include/c++/13/utility /usr/include/c++/13/bits/stl_relops.h \
- /home/ypc/Projects/git-demo/include/gf2p/gf2p.h \
+ /home/ypc/Projects/ldpc/git-demo/include/gf2p/gf2p.h \
  /usr/include/c++/13/iostream /usr/include/c++/13/map \
  /usr/include/c++/13/bits/stl_tree.h /usr/include/c++/13/bits/stl_map.h \
  /usr/include/c++/13/bits/stl_multimap.h /usr/include/c++/13/random \

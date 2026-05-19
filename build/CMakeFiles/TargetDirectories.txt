@@ -1,3 +1,4 @@
-/home/ypc/Projects/git-demo/build/CMakeFiles/ldpc_constructor.dir
-/home/ypc/Projects/git-demo/build/CMakeFiles/edit_cache.dir
-/home/ypc/Projects/git-demo/build/CMakeFiles/rebuild_cache.dir
+/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles/ldpc_constructor.dir
+/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles/simulate_qec.dir
+/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles/edit_cache.dir
+/home/ypc/Projects/ldpc/git-demo/build/CMakeFiles/rebuild_cache.dir

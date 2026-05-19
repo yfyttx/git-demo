@@ -1,7 +1,7 @@
 CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o: \
- /home/ypc/Projects/git-demo/src/ldpc_codes/binary_codes.cpp \
+ /home/ypc/Projects/ldpc/git-demo/src/ldpc_codes/binary_codes.cpp \
  /usr/include/stdc-predef.h \
- /home/ypc/Projects/git-demo/include/ldpc_codes/binary_codes.h \
+ /home/ypc/Projects/ldpc/git-demo/include/ldpc_codes/binary_codes.h \
  /usr/include/eigen3/Eigen/Dense /usr/include/eigen3/Eigen/Core \
  /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
  /usr/include/eigen3/Eigen/src/Core/util/Macros.h \

@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ypc/Projects/git-demo
+CMAKE_SOURCE_DIR = /home/ypc/Projects/ldpc/git-demo
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ypc/Projects/git-demo/build
+CMAKE_BINARY_DIR = /home/ypc/Projects/ldpc/git-demo/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ypc/Projects/git-demo/build/CMakeFiles /home/ypc/Projects/git-demo/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ypc/Projects/ldpc/git-demo/build/CMakeFiles /home/ypc/Projects/ldpc/git-demo/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ypc/Projects/git-demo/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ypc/Projects/ldpc/git-demo/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,12 +129,26 @@ ldpc_constructor/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/build
 .PHONY : ldpc_constructor/fast
 
+#=============================================================================
+# Target rules for targets named simulate_qec
+
+# Build rule for target.
+simulate_qec: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 simulate_qec
+.PHONY : simulate_qec
+
+# fast build rule for target.
+simulate_qec/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/build
+.PHONY : simulate_qec/fast
+
 peg-unige/BigGirth.o: peg-unige/BigGirth.C.o
 .PHONY : peg-unige/BigGirth.o
 
 # target to build an object file
 peg-unige/BigGirth.C.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/peg-unige/BigGirth.C.o
 .PHONY : peg-unige/BigGirth.C.o
 
 peg-unige/BigGirth.i: peg-unige/BigGirth.C.i
@@ -143,6 +157,7 @@ peg-unige/BigGirth.i: peg-unige/BigGirth.C.i
 # target to preprocess a source file
 peg-unige/BigGirth.C.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/peg-unige/BigGirth.C.i
 .PHONY : peg-unige/BigGirth.C.i
 
 peg-unige/BigGirth.s: peg-unige/BigGirth.C.s
@@ -151,6 +166,7 @@ peg-unige/BigGirth.s: peg-unige/BigGirth.C.s
 # target to generate assembly for a file
 peg-unige/BigGirth.C.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/BigGirth.C.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/peg-unige/BigGirth.C.s
 .PHONY : peg-unige/BigGirth.C.s
 
 peg-unige/CyclesOfGraph.o: peg-unige/CyclesOfGraph.C.o
@@ -159,6 +175,7 @@ peg-unige/CyclesOfGraph.o: peg-unige/CyclesOfGraph.C.o
 # target to build an object file
 peg-unige/CyclesOfGraph.C.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/peg-unige/CyclesOfGraph.C.o
 .PHONY : peg-unige/CyclesOfGraph.C.o
 
 peg-unige/CyclesOfGraph.i: peg-unige/CyclesOfGraph.C.i
@@ -167,6 +184,7 @@ peg-unige/CyclesOfGraph.i: peg-unige/CyclesOfGraph.C.i
 # target to preprocess a source file
 peg-unige/CyclesOfGraph.C.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/peg-unige/CyclesOfGraph.C.i
 .PHONY : peg-unige/CyclesOfGraph.C.i
 
 peg-unige/CyclesOfGraph.s: peg-unige/CyclesOfGraph.C.s
@@ -175,6 +193,7 @@ peg-unige/CyclesOfGraph.s: peg-unige/CyclesOfGraph.C.s
 # target to generate assembly for a file
 peg-unige/CyclesOfGraph.C.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/CyclesOfGraph.C.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/peg-unige/CyclesOfGraph.C.s
 .PHONY : peg-unige/CyclesOfGraph.C.s
 
 peg-unige/Random.o: peg-unige/Random.C.o
@@ -183,6 +202,7 @@ peg-unige/Random.o: peg-unige/Random.C.o
 # target to build an object file
 peg-unige/Random.C.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/peg-unige/Random.C.o
 .PHONY : peg-unige/Random.C.o
 
 peg-unige/Random.i: peg-unige/Random.C.i
@@ -191,6 +211,7 @@ peg-unige/Random.i: peg-unige/Random.C.i
 # target to preprocess a source file
 peg-unige/Random.C.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/peg-unige/Random.C.i
 .PHONY : peg-unige/Random.C.i
 
 peg-unige/Random.s: peg-unige/Random.C.s
@@ -199,7 +220,35 @@ peg-unige/Random.s: peg-unige/Random.C.s
 # target to generate assembly for a file
 peg-unige/Random.C.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/peg-unige/Random.C.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/peg-unige/Random.C.s
 .PHONY : peg-unige/Random.C.s
+
+src/decoder/NB_BP_Decoder.o: src/decoder/NB_BP_Decoder.cpp.o
+.PHONY : src/decoder/NB_BP_Decoder.o
+
+# target to build an object file
+src/decoder/NB_BP_Decoder.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/decoder/NB_BP_Decoder.cpp.o
+.PHONY : src/decoder/NB_BP_Decoder.cpp.o
+
+src/decoder/NB_BP_Decoder.i: src/decoder/NB_BP_Decoder.cpp.i
+.PHONY : src/decoder/NB_BP_Decoder.i
+
+# target to preprocess a source file
+src/decoder/NB_BP_Decoder.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/decoder/NB_BP_Decoder.cpp.i
+.PHONY : src/decoder/NB_BP_Decoder.cpp.i
+
+src/decoder/NB_BP_Decoder.s: src/decoder/NB_BP_Decoder.cpp.s
+.PHONY : src/decoder/NB_BP_Decoder.s
+
+# target to generate assembly for a file
+src/decoder/NB_BP_Decoder.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/decoder/NB_BP_Decoder.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/decoder/NB_BP_Decoder.cpp.s
+.PHONY : src/decoder/NB_BP_Decoder.cpp.s
 
 src/gf2p/gf2p.o: src/gf2p/gf2p.cpp.o
 .PHONY : src/gf2p/gf2p.o
@@ -207,6 +256,7 @@ src/gf2p/gf2p.o: src/gf2p/gf2p.cpp.o
 # target to build an object file
 src/gf2p/gf2p.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/gf2p/gf2p.cpp.o
 .PHONY : src/gf2p/gf2p.cpp.o
 
 src/gf2p/gf2p.i: src/gf2p/gf2p.cpp.i
@@ -215,6 +265,7 @@ src/gf2p/gf2p.i: src/gf2p/gf2p.cpp.i
 # target to preprocess a source file
 src/gf2p/gf2p.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/gf2p/gf2p.cpp.i
 .PHONY : src/gf2p/gf2p.cpp.i
 
 src/gf2p/gf2p.s: src/gf2p/gf2p.cpp.s
@@ -223,6 +274,7 @@ src/gf2p/gf2p.s: src/gf2p/gf2p.cpp.s
 # target to generate assembly for a file
 src/gf2p/gf2p.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/gf2p/gf2p.cpp.s
 .PHONY : src/gf2p/gf2p.cpp.s
 
 src/ldpc_codes/binary_codes.o: src/ldpc_codes/binary_codes.cpp.o
@@ -231,6 +283,7 @@ src/ldpc_codes/binary_codes.o: src/ldpc_codes/binary_codes.cpp.o
 # target to build an object file
 src/ldpc_codes/binary_codes.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/ldpc_codes/binary_codes.cpp.o
 .PHONY : src/ldpc_codes/binary_codes.cpp.o
 
 src/ldpc_codes/binary_codes.i: src/ldpc_codes/binary_codes.cpp.i
@@ -239,6 +292,7 @@ src/ldpc_codes/binary_codes.i: src/ldpc_codes/binary_codes.cpp.i
 # target to preprocess a source file
 src/ldpc_codes/binary_codes.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/ldpc_codes/binary_codes.cpp.i
 .PHONY : src/ldpc_codes/binary_codes.cpp.i
 
 src/ldpc_codes/binary_codes.s: src/ldpc_codes/binary_codes.cpp.s
@@ -247,6 +301,7 @@ src/ldpc_codes/binary_codes.s: src/ldpc_codes/binary_codes.cpp.s
 # target to generate assembly for a file
 src/ldpc_codes/binary_codes.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/binary_codes.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/ldpc_codes/binary_codes.cpp.s
 .PHONY : src/ldpc_codes/binary_codes.cpp.s
 
 src/ldpc_codes/nonbinary_codes.o: src/ldpc_codes/nonbinary_codes.cpp.o
@@ -255,6 +310,7 @@ src/ldpc_codes/nonbinary_codes.o: src/ldpc_codes/nonbinary_codes.cpp.o
 # target to build an object file
 src/ldpc_codes/nonbinary_codes.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/ldpc_codes/nonbinary_codes.cpp.o
 .PHONY : src/ldpc_codes/nonbinary_codes.cpp.o
 
 src/ldpc_codes/nonbinary_codes.i: src/ldpc_codes/nonbinary_codes.cpp.i
@@ -263,6 +319,7 @@ src/ldpc_codes/nonbinary_codes.i: src/ldpc_codes/nonbinary_codes.cpp.i
 # target to preprocess a source file
 src/ldpc_codes/nonbinary_codes.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/ldpc_codes/nonbinary_codes.cpp.i
 .PHONY : src/ldpc_codes/nonbinary_codes.cpp.i
 
 src/ldpc_codes/nonbinary_codes.s: src/ldpc_codes/nonbinary_codes.cpp.s
@@ -271,6 +328,7 @@ src/ldpc_codes/nonbinary_codes.s: src/ldpc_codes/nonbinary_codes.cpp.s
 # target to generate assembly for a file
 src/ldpc_codes/nonbinary_codes.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/ldpc_codes/nonbinary_codes.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/ldpc_codes/nonbinary_codes.cpp.s
 .PHONY : src/ldpc_codes/nonbinary_codes.cpp.s
 
 src/main.o: src/main.cpp.o
@@ -297,12 +355,37 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/simulate_qec.o: src/simulate_qec.cpp.o
+.PHONY : src/simulate_qec.o
+
+# target to build an object file
+src/simulate_qec.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/simulate_qec.cpp.o
+.PHONY : src/simulate_qec.cpp.o
+
+src/simulate_qec.i: src/simulate_qec.cpp.i
+.PHONY : src/simulate_qec.i
+
+# target to preprocess a source file
+src/simulate_qec.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/simulate_qec.cpp.i
+.PHONY : src/simulate_qec.cpp.i
+
+src/simulate_qec.s: src/simulate_qec.cpp.s
+.PHONY : src/simulate_qec.s
+
+# target to generate assembly for a file
+src/simulate_qec.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/simulate_qec.cpp.s
+.PHONY : src/simulate_qec.cpp.s
+
 src/utils/matrix_utils.o: src/utils/matrix_utils.cpp.o
 .PHONY : src/utils/matrix_utils.o
 
 # target to build an object file
 src/utils/matrix_utils.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/utils/matrix_utils.cpp.o
 .PHONY : src/utils/matrix_utils.cpp.o
 
 src/utils/matrix_utils.i: src/utils/matrix_utils.cpp.i
@@ -311,6 +394,7 @@ src/utils/matrix_utils.i: src/utils/matrix_utils.cpp.i
 # target to preprocess a source file
 src/utils/matrix_utils.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/utils/matrix_utils.cpp.i
 .PHONY : src/utils/matrix_utils.cpp.i
 
 src/utils/matrix_utils.s: src/utils/matrix_utils.cpp.s
@@ -319,6 +403,7 @@ src/utils/matrix_utils.s: src/utils/matrix_utils.cpp.s
 # target to generate assembly for a file
 src/utils/matrix_utils.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ldpc_constructor.dir/build.make CMakeFiles/ldpc_constructor.dir/src/utils/matrix_utils.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simulate_qec.dir/build.make CMakeFiles/simulate_qec.dir/src/utils/matrix_utils.cpp.s
 .PHONY : src/utils/matrix_utils.cpp.s
 
 # Help Target
@@ -330,6 +415,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ldpc_constructor"
+	@echo "... simulate_qec"
 	@echo "... peg-unige/BigGirth.o"
 	@echo "... peg-unige/BigGirth.i"
 	@echo "... peg-unige/BigGirth.s"
@@ -339,6 +425,9 @@ help:
 	@echo "... peg-unige/Random.o"
 	@echo "... peg-unige/Random.i"
 	@echo "... peg-unige/Random.s"
+	@echo "... src/decoder/NB_BP_Decoder.o"
+	@echo "... src/decoder/NB_BP_Decoder.i"
+	@echo "... src/decoder/NB_BP_Decoder.s"
 	@echo "... src/gf2p/gf2p.o"
 	@echo "... src/gf2p/gf2p.i"
 	@echo "... src/gf2p/gf2p.s"
@@ -351,6 +440,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/simulate_qec.o"
+	@echo "... src/simulate_qec.i"
+	@echo "... src/simulate_qec.s"
 	@echo "... src/utils/matrix_utils.o"
 	@echo "... src/utils/matrix_utils.i"
 	@echo "... src/utils/matrix_utils.s"

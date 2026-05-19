@@ -1,6 +1,7 @@
 CMakeFiles/ldpc_constructor.dir/src/gf2p/gf2p.cpp.o: \
- /home/ypc/Projects/git-demo/src/gf2p/gf2p.cpp /usr/include/stdc-predef.h \
- /home/ypc/Projects/git-demo/include/gf2p/gf2p.h \
+ /home/ypc/Projects/ldpc/git-demo/src/gf2p/gf2p.cpp \
+ /usr/include/stdc-predef.h \
+ /home/ypc/Projects/ldpc/git-demo/include/gf2p/gf2p.h \
  /usr/include/c++/13/stdexcept /usr/include/c++/13/exception \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
