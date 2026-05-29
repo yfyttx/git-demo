@@ -3,8 +3,10 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <random>
 #include <set>
+#include <stdexcept>
 #include <vector>
 
 using namespace Eigen;
@@ -138,12 +140,31 @@ std::vector<int> gaussElimination(const Eigen::MatrixXi &system, int mod) {
 
     Eigen::MatrixXi A = system;
     int rows = A.rows();
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < A.cols(); ++j) {
+            A(i, j) = (A(i, j) % mod + mod) % mod;
+        }
+    }
+
+    auto satisfies = [&](const std::vector<int> &x) {
+        for (int i = 0; i < system.rows(); ++i) {
+            long long sum = 0;
+            for (int j = 0; j < var_count; ++j) {
+                int coeff = (system(i, j) % mod + mod) % mod;
+                sum += (long long)coeff * x[j];
+            }
+            int lhs = (int)(sum % mod);
+            int rhs = (system(i, var_count) % mod + mod) % mod;
+            if (lhs != rhs) return false;
+        }
+        return true;
+    };
 
     if (rows == 0) {
         std::vector<int> x(var_count);
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_int_distribution<> distrib(1, mod - 1);
+        std::uniform_int_distribution<> distrib(0, mod - 1);
         for (int i = 0; i < var_count; ++i)
             x[i] = distrib(gen);
         return x;
@@ -153,7 +174,8 @@ std::vector<int> gaussElimination(const Eigen::MatrixXi &system, int mod) {
     std::vector<int> pivot_col(rows, -1);
     for (int j = 0; j < var_count && rank < rows; ++j) {
         int pivot_row_idx = rank;
-        while (pivot_row_idx < rows && A(pivot_row_idx, j) == 0)
+        while (pivot_row_idx < rows &&
+               (A(pivot_row_idx, j) == 0 || std::gcd(A(pivot_row_idx, j), mod) != 1))
             pivot_row_idx++;
         if (pivot_row_idx < rows) {
             A.row(rank).swap(A.row(pivot_row_idx));
@@ -162,14 +184,13 @@ std::vector<int> gaussElimination(const Eigen::MatrixXi &system, int mod) {
             for (int i = 1; i < mod; ++i)
                 if ((A(rank, j) * i) % mod == 1)
                     inv = i;
-            if (inv == -1)
-                throw std::runtime_error("Modular inverse does not exist");
-            for (int k = j; k < A.cols(); ++k)
+            if (inv == -1) continue;
+            for (int k = 0; k < A.cols(); ++k)
                 A(rank, k) = (A(rank, k) * inv) % mod;
             for (int i = 0; i < rows; ++i) {
                 if (i != rank) {
                     int factor = A(i, j);
-                    for (int k = j; k < A.cols(); ++k) {
+                    for (int k = 0; k < A.cols(); ++k) {
                         long long temp = A(i, k);
                         temp -= (long long)factor * A(rank, k);
                         A(i, k) = (int)((temp % mod + mod) % mod);
@@ -188,7 +209,7 @@ std::vector<int> gaussElimination(const Eigen::MatrixXi &system, int mod) {
     // 随机化自由变量
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distrib(1, mod - 1);
+    std::uniform_int_distribution<> distrib(0, mod - 1);
     for (int j = 0; j < var_count; ++j)
         if (!is_pivot_var[j])
             x[j] = distrib(gen);
@@ -201,7 +222,18 @@ std::vector<int> gaussElimination(const Eigen::MatrixXi &system, int mod) {
             sum += (long long)A(i, j) * x[j];
         x[p_col] = (int)(((long long)A(i, var_count) - (sum % mod) + mod) % mod);
     }
-    return x;
+    if (satisfies(x)) return x;
+
+    std::uniform_int_distribution<> constant_distrib(0, mod - 1);
+    for (int attempt = 0; attempt < 32; ++attempt) {
+        std::vector<int> constant_x(var_count, constant_distrib(gen));
+        if (satisfies(constant_x)) return constant_x;
+    }
+
+    std::vector<int> zero_x(var_count, 0);
+    if (satisfies(zero_x)) return zero_x;
+
+    throw std::runtime_error("Could not find a valid solution modulo composite modulus");
 }
 
 // [实现 3] 求解 H_delta 的行 (解决 Linker Error)

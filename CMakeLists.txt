@@ -1,58 +1,47 @@
 cmake_minimum_required(VERSION 3.10)
+project(QuantumLDPC LANGUAGES CXX)
 
-# 项目名称
-project(QuantumLDPC)
-
-# 设置 C++ 标准
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# ---------------------------------------------------------
-# 1. 查找依赖库
-# ---------------------------------------------------------
 find_package(Eigen3 REQUIRED)
 
-# ---------------------------------------------------------
-# 2. 定义源文件 (建议使用相对路径确保稳健性)
-# ---------------------------------------------------------
-set(SOURCES
-    src/main.cpp
-    # 关键点：添加下面这个文件，因为 constructBinaryHMatrices 在这里定义
-    src/ldpc_codes/binary_codes.cpp  
-    
-    # 如果你还有其他的工具类，也一并加上
-    # src/gf2p/gf2p.cpp 
-    # src/utils/matrix_utils.cpp 
-
-    # PEG 库文件
+set(COMMON_SOURCES
+    src/gf2p/gf2p.cpp
+    src/ldpc_codes/binary_codes.cpp
+    src/ldpc_codes/nonbinary_codes.cpp
+    src/utils/matrix_utils.cpp
+    src/decoder/NB_BP_Decoder.cpp
     peg-unige/BigGirth.C
     peg-unige/Random.C
     peg-unige/CyclesOfGraph.C
 )
 
-# ---------------------------------------------------------
-# 3. 生成可执行文件
-# ---------------------------------------------------------
-# 这里把生成的文件名改为 construct，方便刚才的 Python 脚本调用
-add_executable(construct ${SOURCES})
-
-# ---------------------------------------------------------
-# 4. 包含目录与链接库
-# ---------------------------------------------------------
-target_include_directories(construct PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/peg-unige
-    ${EIGEN3_INCLUDE_DIRS}
+add_executable(ldpc_constructor
+    src/main.cpp
+    ${COMMON_SOURCES}
 )
 
-target_link_libraries(construct PRIVATE Eigen3::Eigen)
+add_executable(simulate_qec
+    src/simulate_qec.cpp
+    ${COMMON_SOURCES}
+)
 
-# ---------------------------------------------------------
-# 5. 编译优化 (这对大规模矩阵生成至关重要)
-# ---------------------------------------------------------
+foreach(target_name IN ITEMS ldpc_constructor simulate_qec)
+    target_include_directories(${target_name} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/peg-unige
+    )
+    target_link_libraries(${target_name} PRIVATE Eigen3::Eigen)
+endforeach()
+
+add_custom_target(construct DEPENDS ldpc_constructor)
+
 if(MSVC)
-    target_compile_options(construct PRIVATE /O2 /W3)
-else()
-    # 开启 -O3 优化和高级向量化，加快矩阵乘法和 PEG 运行速度
-    target_compile_options(construct PRIVATE -O3 -Wall -march=native)
+    target_compile_options(ldpc_constructor PRIVATE /O2 /W3)
+    target_compile_options(simulate_qec PRIVATE /O2 /W3)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(ldpc_constructor PRIVATE -O3 -Wall)
+    target_compile_options(simulate_qec PRIVATE -O3 -Wall)
 endif()

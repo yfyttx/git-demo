@@ -1,0 +1,8 @@
+build/
+build-win/
+compile_commands.json
+runs/sim_*.tsv
+*.exe
+*.obj
+*.o
+*.d

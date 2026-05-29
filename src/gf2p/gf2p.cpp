@@ -41,6 +41,7 @@ int GF2p::findPrimitiveRoot() {
     throw std::runtime_error("No primitive root found");
 }
 int GF2p::add(int a, int b) const { return polyAdd(a, b); }
+int GF2p::sub(int a, int b) const { return add(a, b); }
 int GF2p::mul(int a, int b) const {
     if (a == 0 || b == 0) return 0;
     return alpha_to_poly.at((poly_to_log.at(a) + poly_to_log.at(b)) % mod);

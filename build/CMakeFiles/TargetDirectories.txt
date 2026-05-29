@@ -1,3 +1,0 @@
-/home/ypc/Projects/git-demo/build/CMakeFiles/construct.dir
-/home/ypc/Projects/git-demo/build/CMakeFiles/edit_cache.dir
-/home/ypc/Projects/git-demo/build/CMakeFiles/rebuild_cache.dir
