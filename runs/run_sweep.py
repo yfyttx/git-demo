@@ -40,6 +40,11 @@ def main():
     )
     parser.add_argument("--construct", action="store_true", help="Regenerate matrices first.")
     parser.add_argument("--no-build", action="store_true", help="Skip cmake build step.")
+    parser.add_argument(
+        "--suffix",
+        default="_J2_L6_P7_spc25_GF256",
+        help="Matrix filename suffix to simulate.",
+    )
     args = parser.parse_args()
 
     project_root = Path(__file__).resolve().parent.parent
@@ -81,6 +86,7 @@ def main():
     print(f"  Trials         = {args.trials}")
     print(f"  MaxIters       = {args.max_iters}")
     print(f"  TargetFailures = {args.target_failures}")
+    print(f"  Matrix suffix   = {args.suffix}")
     print(f"  f_m list       = {args.fm}")
     print(f"  Output         = {output_file}")
     print()
@@ -91,6 +97,7 @@ def main():
         str(args.trials),
         str(args.max_iters),
         str(args.target_failures),
+        args.suffix,
         args.fm,
     ]
     run_command(command, cwd=project_root, capture_to=output_file)

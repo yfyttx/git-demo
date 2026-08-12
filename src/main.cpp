@@ -12,6 +12,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <queue>
@@ -460,24 +461,40 @@ void saveToBinaryFormat(const SparseMatrix<int> &H, const string &filename) {
     cout << "  -> Saved Binary Physical Matrix: " << filename << endl;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     srand(static_cast<unsigned int>(time(nullptr)));
     vector<int> field_poly = {1, 0, 0, 0, 1, 1, 1, 0, 1};
     GF2p gf(8, field_poly);
+    const string matrix_dir = "matrices";
+    filesystem::create_directories(matrix_dir);
+    auto matrixPath = [&](const string& filename) {
+        return matrix_dir + "/" + filename;
+    };
+
+    int J = 2, L = 6, P = 7, m2 = 5, n2 = 30;
+    if (argc >= 6) {
+        J = atoi(argv[1]);
+        L = atoi(argv[2]);
+        P = atoi(argv[3]);
+        m2 = atoi(argv[4]);
+        n2 = atoi(argv[5]);
+        cout << "Using arguments: J=" << J << ", L=" << L << ", P=" << P << ", m2=" << m2 << ", n2=" << n2 << endl;
+    } else {
+        cout << "Usage: " << argv[0] << " J L P m2 n2" << endl;
+        cout << "Using default values: J=2, L=6, P=7, m2=5, n2=30" << endl;
+    }
 
     cout << "=== QLDPC: Hybrid (PEG + TIT) Construction ===\n";
 
     cout << "  [TIT] Generating H1 and H3 with linear constraint solving..." << endl;
-    const int J = 2;
-    int L = 6;
-    int P = 31;
-    int sigma = 5;
-    int tau = 2;
+    // 恢复为 TIT 构造中稳健的参数
+    int sigma = 2; 
+    int tau = 3; 
 
     pair<MatrixXi, MatrixXi> tit_bin = constructBinaryHMatrices(J, L, P, sigma, tau);
     auto [H1, H3] = generateOrthogonalNB_TIT(tit_bin.first, tit_bin.second, gf);
 
-    int h2_cols = 5;
+    int h2_cols = n2 - m2; // Use n2-m2 for H2 cols to match the sub-block size
     h2_cols = max(h2_cols, 2);
     SparseMatrix<int> H2 = makeAllOnesRowNB(h2_cols);
     SparseMatrix<int> G2 = computeGeneratorMatrix(H2, gf);
@@ -500,12 +517,6 @@ int main() {
     cout << "  [Result] HX: " << HX.rows() << "x" << HX.cols() << endl;
     cout << "  [Result] HZ: " << HZ.rows() << "x" << HZ.cols() << endl;
 
-    cout << "  [H1 Girth]: " << calculate_girth(H1) << endl;
-    cout << "  [H2 Girth]: " << calculate_girth(H2) << endl;
-    cout << "  [H3 Girth]: " << calculate_girth(H3) << endl;
-    cout << "  [Hx Girth]: " << calculate_girth(HX) << endl;
-    cout << "  [Hz Girth]: " << calculate_girth(HZ) << endl;
-
     cout << "\n=== Verifying Quantum Orthogonality ===" << endl;
     cout << "  Checking if HX * HZ^T = 0 in GF(" << gf.getSize() << ")..." << endl;
 
@@ -523,20 +534,21 @@ int main() {
     SparseMatrix<int> HX_physical = convertToBinary(HX, gf, field_poly, false);
     SparseMatrix<int> HZ_physical = convertToBinary(HZ, gf, field_poly, true);
 
-    cout << "  [Result] Physical HX size: " << HX_physical.rows() << "x"
-         << HX_physical.cols() << endl;
-    cout << "  [Result] Physical HZ size: " << HZ_physical.rows() << "x"
-         << HZ_physical.cols() << endl;
+    // H2 is currently a single-parity-check code of length n2 - m2.
+    // Keep every construction parameter that affects the generated matrices in
+    // the filename so different J/L configurations cannot overwrite each other.
+    string suffix = "_J" + to_string(J) + "_L" + to_string(L) +
+                    "_P" + to_string(P) + "_spc" + to_string(h2_cols) +
+                    "_GF" + to_string(gf.getSize());
+    saveToBinaryFormat(HX_physical, matrixPath("HX_Phys" + suffix + ".txt"));
+    saveToBinaryFormat(HZ_physical, matrixPath("HZ_Phys" + suffix + ".txt"));
+    saveToEssaiFormat(H1, matrixPath("H1" + suffix + ".txt"), gf);
+    saveToEssaiFormat(H2, matrixPath("H2" + suffix + ".txt"), gf);
+    saveToEssaiFormat(H3, matrixPath("H3" + suffix + ".txt"), gf);
+    saveToEssaiFormat(G2, matrixPath("G2" + suffix + ".txt"), gf);
+    saveToEssaiFormat(HX, matrixPath("HX" + suffix + ".txt"), gf);
+    saveToEssaiFormat(HZ, matrixPath("HZ" + suffix + ".txt"), gf);
 
-    saveToBinaryFormat(HX_physical, "HX_Physical_Binary.txt");
-    saveToBinaryFormat(HZ_physical, "HZ_Physical_Binary.txt");
-    saveToEssaiFormat(H1, "H1_sparse.txt", gf);
-    saveToEssaiFormat(H2, "H2_sparse.txt", gf);
-    saveToEssaiFormat(H3, "H3_sparse.txt", gf);
-    saveToEssaiFormat(G2, "G2_sparse.txt", gf);
-    saveToEssaiFormat(HX, "HX_Safe_GF256.txt", gf);
-    saveToEssaiFormat(HZ, "HZ_Safe_GF256.txt", gf);
-
-    cout << "CHECK: VERSION 3.0 - PRODUCT HZ/HX CONSTRUCTION" << endl;
+    cout << "SAVED matrices with suffix: " << suffix << " in " << matrix_dir << "/" << endl;
     return 0;
 }

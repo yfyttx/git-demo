@@ -41,6 +41,28 @@ public:
         bool is_x_error
     );
 
+    std::vector<std::vector<double>> syndrome_decode_soft(
+        const Eigen::SparseMatrix<int, Eigen::RowMajor>& H_nb,
+        const std::vector<int>& syn_bin,
+        double p_depolar,
+        bool is_x_error
+    );
+
+    std::vector<std::vector<double>> syndrome_decode_soft_with_prior(
+        const Eigen::SparseMatrix<int, Eigen::RowMajor>& H_nb,
+        const std::vector<int>& syn_bin,
+        const std::vector<std::vector<double>>& symbol_priors,
+        bool is_x_error
+    );
+
+    std::pair<std::vector<std::vector<double>>, std::vector<std::vector<double>>>
+    syndrome_decode_soft_with_prior_and_extrinsic(
+        const Eigen::SparseMatrix<int, Eigen::RowMajor>& H_nb,
+        const std::vector<int>& syn_bin,
+        const std::vector<std::vector<double>>& symbol_priors,
+        bool is_x_error
+    );
+
     // 校验逻辑综合征是否满足 (用于停止准则) [cite: 371]
     bool check_joint_syndrome(
         const Eigen::SparseMatrix<int, Eigen::RowMajor>& HX_nb,

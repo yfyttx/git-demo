@@ -6,3 +6,4 @@ runs/sim_*.tsv
 *.obj
 *.o
 *.d
+__pycache__/

@@ -385,15 +385,23 @@ std::vector<int> NB_BP_Decoder::syndrome_decode(
     double p_depolar,
     bool is_x_error
 ) {
-    int N = H_nb.cols();
-    int M = H_nb.rows();
-
-    std::vector<int> logical_syn(M, 0);
-    for (int i = 0; i < M; ++i) {
-        int raw = binToGf(syn_bin, i * e);
-        logical_syn[i] = is_x_error ? x_to_internal_basis[raw] : raw;
+    std::vector<std::vector<double>> marginals =
+        syndrome_decode_soft(H_nb, syn_bin, p_depolar, is_x_error);
+    std::vector<int> est(marginals.size(), 0);
+    for (int j = 0; j < static_cast<int>(marginals.size()); ++j) {
+        est[j] = static_cast<int>(
+            std::max_element(marginals[j].begin(), marginals[j].end()) - marginals[j].begin());
     }
+    return est;
+}
 
+std::vector<std::vector<double>> NB_BP_Decoder::syndrome_decode_soft(
+    const Eigen::SparseMatrix<int, Eigen::RowMajor>& H_nb,
+    const std::vector<int>& syn_bin,
+    double p_depolar,
+    bool is_x_error
+) {
+    int N = H_nb.cols();
     auto bit_weight = [](int value) {
         int weight = 0;
         while (value) {
@@ -416,10 +424,54 @@ std::vector<int> NB_BP_Decoder::syndrome_decode(
     for (double& value : prior)
         value /= (prior_sum + 1e-30);
 
+    std::vector<std::vector<double>> symbol_priors(N, prior);
+    return syndrome_decode_soft_with_prior(H_nb, syn_bin, symbol_priors, is_x_error);
+}
+
+std::vector<std::vector<double>> NB_BP_Decoder::syndrome_decode_soft_with_prior(
+    const Eigen::SparseMatrix<int, Eigen::RowMajor>& H_nb,
+    const std::vector<int>& syn_bin,
+    const std::vector<std::vector<double>>& symbol_priors,
+    bool is_x_error
+) {
+    return syndrome_decode_soft_with_prior_and_extrinsic(
+        H_nb, syn_bin, symbol_priors, is_x_error).first;
+}
+
+std::pair<std::vector<std::vector<double>>, std::vector<std::vector<double>>>
+NB_BP_Decoder::syndrome_decode_soft_with_prior_and_extrinsic(
+    const Eigen::SparseMatrix<int, Eigen::RowMajor>& H_nb,
+    const std::vector<int>& syn_bin,
+    const std::vector<std::vector<double>>& symbol_priors,
+    bool is_x_error
+) {
+    int N = H_nb.cols();
+    int M = H_nb.rows();
+
+    std::vector<std::vector<double>> bp_priors(N, std::vector<double>(q, 0.0));
+    for (int j = 0; j < N; ++j) {
+        if (is_x_error) {
+            for (int internal_value = 0; internal_value < q; ++internal_value)
+                bp_priors[j][internal_value] =
+                    symbol_priors[j][x_from_internal_basis[internal_value]];
+        } else {
+            bp_priors[j] = symbol_priors[j];
+        }
+        double prior_sum = std::accumulate(bp_priors[j].begin(), bp_priors[j].end(), 0.0);
+        for (double& value : bp_priors[j])
+            value /= (prior_sum + 1e-30);
+    }
+
+    std::vector<int> logical_syn(M, 0);
+    for (int i = 0; i < M; ++i) {
+        int raw = binToGf(syn_bin, i * e);
+        logical_syn[i] = is_x_error ? x_to_internal_basis[raw] : raw;
+    }
+
     std::vector<std::map<int, std::vector<double>>> v2c(N), c2v(M);
     for (int i = 0; i < M; ++i) {
         for (Eigen::SparseMatrix<int, Eigen::RowMajor>::InnerIterator it(H_nb, i); it; ++it) {
-            v2c[it.col()][i] = prior;
+            v2c[it.col()][i] = bp_priors[it.col()];
             c2v[i][it.col()] = std::vector<double>(q, 1.0 / q);
         }
     }
@@ -483,7 +535,7 @@ std::vector<int> NB_BP_Decoder::syndrome_decode(
         }
 
         for (int j = 0; j < N; ++j) {
-            std::vector<double> posterior = prior;
+            std::vector<double> posterior = bp_priors[j];
             for (const auto& edge : v2c[j]) {
                 int i = edge.first;
                 auto msg_it = c2v[i].find(j);
@@ -522,9 +574,39 @@ std::vector<int> NB_BP_Decoder::syndrome_decode(
             break;
     }
 
-    if (is_x_error) {
-        for (int& value : est)
-            value = x_from_internal_basis[value];
+    std::vector<std::vector<double>> marginals(N, std::vector<double>(q, 0.0));
+    std::vector<std::vector<double>> extrinsics(N, std::vector<double>(q, 0.0));
+    for (int j = 0; j < N; ++j) {
+        std::vector<double> posterior = bp_priors[j];
+        std::vector<double> extrinsic(q, 1.0);
+        for (const auto& edge : v2c[j]) {
+            int i = edge.first;
+            auto msg_it = c2v[i].find(j);
+            if (msg_it == c2v[i].end())
+                continue;
+            for (int value = 0; value < q; ++value) {
+                posterior[value] *= msg_it->second[value];
+                extrinsic[value] *= msg_it->second[value];
+            }
+        }
+
+        double post_sum = std::accumulate(posterior.begin(), posterior.end(), 0.0);
+        for (double& value : posterior)
+            value /= (post_sum + 1e-30);
+
+        double ext_sum = std::accumulate(extrinsic.begin(), extrinsic.end(), 0.0);
+        for (double& value : extrinsic)
+            value /= (ext_sum + 1e-30);
+
+        if (is_x_error) {
+            for (int internal_value = 0; internal_value < q; ++internal_value) {
+                marginals[j][x_from_internal_basis[internal_value]] += posterior[internal_value];
+                extrinsics[j][x_from_internal_basis[internal_value]] += extrinsic[internal_value];
+            }
+        } else {
+            marginals[j] = posterior;
+            extrinsics[j] = extrinsic;
+        }
     }
-    return est;
+    return {marginals, extrinsics};
 }
