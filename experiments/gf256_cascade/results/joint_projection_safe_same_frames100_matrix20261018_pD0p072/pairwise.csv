@@ -1,0 +1,2 @@
+p_D,mode_a,mode_b,a_fail_b_success,a_success_b_fail,mcnemar_two_sided_p
+0.072,conditioned_robust_tuned,conditioned_robust_joint_projection_safe,0,0,1.0

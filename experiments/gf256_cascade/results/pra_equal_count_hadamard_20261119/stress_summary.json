@@ -1,0 +1,162 @@
+{
+  "p": 0.13,
+  "alpha": 100,
+  "seeds": [
+    20261810,
+    20261811
+  ],
+  "comparisons": [
+    {
+      "matrix": 1,
+      "head_position": 8,
+      "frames": 200,
+      "head": {
+        "logical_failures": 30,
+        "logical_fer": 0.15,
+        "fer_exact_95": [
+          0.10354952352186261,
+          0.20715870366855224
+        ],
+        "wer_events": 30,
+        "wer_physical": 0.15,
+        "qber_pauli": 0.007734822451317297,
+        "staged_failures": 0,
+        "projected_failures": 30,
+        "undetected": 0,
+        "zero_upper95": null
+      },
+      "tail": {
+        "logical_failures": 30,
+        "logical_fer": 0.15,
+        "fer_exact_95": [
+          0.10354952352186261,
+          0.20715870366855224
+        ],
+        "wer_events": 30,
+        "wer_physical": 0.15,
+        "qber_pauli": 0.007705231004200076,
+        "staged_failures": 0,
+        "projected_failures": 30,
+        "undetected": 0,
+        "zero_upper95": null
+      },
+      "rescued": 12,
+      "regressed": 12,
+      "mcnemar_exact_p": 1.0
+    },
+    {
+      "matrix": 1,
+      "head_position": 2,
+      "frames": 200,
+      "head": {
+        "logical_failures": 34,
+        "logical_fer": 0.17,
+        "fer_exact_95": [
+          0.12069562323601399,
+          0.22937160039389873
+        ],
+        "wer_events": 34,
+        "wer_physical": 0.17,
+        "qber_pauli": 0.00883352424589538,
+        "staged_failures": 0,
+        "projected_failures": 34,
+        "undetected": 0,
+        "zero_upper95": null
+      },
+      "tail": {
+        "logical_failures": 30,
+        "logical_fer": 0.15,
+        "fer_exact_95": [
+          0.10354952352186261,
+          0.20715870366855224
+        ],
+        "wer_events": 30,
+        "wer_physical": 0.15,
+        "qber_pauli": 0.007705231004200076,
+        "staged_failures": 0,
+        "projected_failures": 30,
+        "undetected": 0,
+        "zero_upper95": null
+      },
+      "rescued": 17,
+      "regressed": 13,
+      "mcnemar_exact_p": 0.5846647117286922
+    },
+    {
+      "matrix": 2,
+      "head_position": 8,
+      "frames": 200,
+      "head": {
+        "logical_failures": 25,
+        "logical_fer": 0.125,
+        "fer_exact_95": [
+          0.08255234182858895,
+          0.17897375007879943
+        ],
+        "wer_events": 25,
+        "wer_physical": 0.125,
+        "qber_pauli": 0.00687094310805651,
+        "staged_failures": 0,
+        "projected_failures": 25,
+        "undetected": 0,
+        "zero_upper95": null
+      },
+      "tail": {
+        "logical_failures": 32,
+        "logical_fer": 0.16,
+        "fer_exact_95": [
+          0.11208749764580157,
+          0.21829901535134097
+        ],
+        "wer_events": 32,
+        "wer_physical": 0.16,
+        "qber_pauli": 0.008670294005345552,
+        "staged_failures": 0,
+        "projected_failures": 32,
+        "undetected": 0,
+        "zero_upper95": null
+      },
+      "rescued": 8,
+      "regressed": 15,
+      "mcnemar_exact_p": 0.21003961563110352
+    },
+    {
+      "matrix": 2,
+      "head_position": 2,
+      "frames": 200,
+      "head": {
+        "logical_failures": 33,
+        "logical_fer": 0.165,
+        "fer_exact_95": [
+          0.1163831199581074,
+          0.22384346771182065
+        ],
+        "wer_events": 33,
+        "wer_physical": 0.165,
+        "qber_pauli": 0.008870752195494463,
+        "staged_failures": 0,
+        "projected_failures": 33,
+        "undetected": 0,
+        "zero_upper95": null
+      },
+      "tail": {
+        "logical_failures": 32,
+        "logical_fer": 0.16,
+        "fer_exact_95": [
+          0.11208749764580157,
+          0.21829901535134097
+        ],
+        "wer_events": 32,
+        "wer_physical": 0.16,
+        "qber_pauli": 0.008670294005345552,
+        "staged_failures": 0,
+        "projected_failures": 32,
+        "undetected": 0,
+        "zero_upper95": null
+      },
+      "rescued": 16,
+      "regressed": 15,
+      "mcnemar_exact_p": 1.0
+    }
+  ]
+}

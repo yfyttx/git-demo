@@ -12,6 +12,7 @@ class GF2p {
 
     // Public API
     int add(int a, int b) const;
+    int sub(int a,int b) const;
     int mul(int a, int b) const;
     int inv(int a) const;
     int log(int a) const;

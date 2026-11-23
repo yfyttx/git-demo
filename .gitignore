@@ -1,0 +1,27 @@
+# Local build trees and compiler caches
+/build/
+/build-win/
+/.cache/
+/compile_commands.json
+*.exe
+*.obj
+*.o
+*.d
+__pycache__/
+*.py[cod]
+
+# Local constructor outputs
+/H1_sparse.txt
+/H2_sparse.txt
+/H3_sparse.txt
+/G2_sparse.txt
+/leftHandGirth.log
+/runs/sim_*.tsv
+
+# Local experiment runs. Add selected data and fixtures explicitly.
+/experiments/*/results/
+/results/
+/output/
+/projects/
+/experiments/presentations/
+/experiments/gf256_cascade/presentations/

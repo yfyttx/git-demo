@@ -1,0 +1,539 @@
+{
+  "frames": 100,
+  "p_D": 0.07125,
+  "f_m": 0.047499999999999994,
+  "seed": 20261122,
+  "max_iters": 100,
+  "marginal": {
+    "logical_failures": 70,
+    "logical_fer": 0.7,
+    "x_syndrome_failures": 4,
+    "z_syndrome_failures": 70,
+    "x_logical_failures": 4,
+    "z_logical_failures": 70,
+    "undetected_logical_failures": 0,
+    "exact_x_frames": 96,
+    "conditioned_frames": 0,
+    "elapsed_seconds": 124.46024361699983
+  },
+  "conditioned": {
+    "logical_failures": 4,
+    "logical_fer": 0.04,
+    "x_syndrome_failures": 4,
+    "z_syndrome_failures": 4,
+    "x_logical_failures": 4,
+    "z_logical_failures": 4,
+    "undetected_logical_failures": 0,
+    "exact_x_frames": 96,
+    "conditioned_frames": 96,
+    "elapsed_seconds": 36.93435605700006
+  },
+  "rescued": 66,
+  "worsened": 0,
+  "both_failed": 4,
+  "mcnemar_exact_two_sided_p": 2.710505431213761e-20,
+  "timing_note": "Wall time; the two runs were concurrent. Not a clean CPU-cost comparison.",
+  "scope": "Complete X/Z logical FER with binary stabilizer membership evaluation.",
+  "records": [
+    {
+      "frame": 0,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 1,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 2,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 3,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 4,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 5,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 6,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 7,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 8,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 9,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 10,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 11,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 12,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 13,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 14,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 15,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 16,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 17,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 18,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 19,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 20,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 21,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": false
+    },
+    {
+      "frame": 22,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 23,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 24,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 25,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 26,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 27,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 28,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 29,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 30,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 31,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 32,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 33,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": false
+    },
+    {
+      "frame": 34,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 35,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 36,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 37,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 38,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 39,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 40,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 41,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 42,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 43,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 44,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 45,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 46,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 47,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 48,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 49,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 50,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 51,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 52,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 53,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 54,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": false
+    },
+    {
+      "frame": 55,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 56,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 57,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 58,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 59,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 60,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 61,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 62,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 63,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 64,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 65,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 66,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 67,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 68,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 69,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 70,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 71,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 72,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 73,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 74,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 75,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 76,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 77,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 78,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 79,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 80,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 81,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 82,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 83,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 84,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 85,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 86,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 87,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 88,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 89,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 90,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 91,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 92,
+      "marginal_logical_ok": true,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 93,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 94,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 95,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 96,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": false
+    },
+    {
+      "frame": 97,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 98,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    },
+    {
+      "frame": 99,
+      "marginal_logical_ok": false,
+      "conditioned_logical_ok": true
+    }
+  ]
+}

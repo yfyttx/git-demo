@@ -1,0 +1,31 @@
+{
+  "construction": "binary companion-block multiplication, not GF256 scalar Kronecker",
+  "polynomial": "0x11d",
+  "primitive_element": 2,
+  "companion_convention": "M(a) is column multiplication; paper [a]=M(a).T",
+  "hx_block": "M(a) @ G2 mod 2",
+  "hz_upper_block": "M(b).T @ selector mod 2",
+  "inner_n": 9,
+  "inner_k": 8,
+  "inner_distance": 2,
+  "outer_columns": 582,
+  "hx_shape": [
+    1552,
+    5238
+  ],
+  "hz_shape": [
+    2134,
+    5238
+  ],
+  "hx_rank": 1552,
+  "hz_rank": 2134,
+  "physical_qubits": 5238,
+  "logical_qubits": 1552,
+  "quantum_rate": 0.2962962962962963,
+  "css_nonzero_entries": 0,
+  "source_sha256": {
+    "HZ_TIT_Outer_For_HX_GF256.txt": "48a020e75938c4efa2173977ba1b06cfb2717ef5aed71707a1789f2a28245c97",
+    "HX_TIT_Outer_For_HZ_GF256.txt": "5b4e93656c8e57c17f064445342c5cedff19f3699836b65dc89b380742541a1a"
+  },
+  "fer": null
+}

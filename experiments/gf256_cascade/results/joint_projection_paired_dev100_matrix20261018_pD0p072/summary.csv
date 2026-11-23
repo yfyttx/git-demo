@@ -1,0 +1,3 @@
+p_D,f_m,mode,frames,logical_failures,FER,wilson_95_lower,wilson_95_upper,z_syndrome_failures,undetected_logical_failures,cpu_seconds,cpu_seconds_per_frame,rescued_vs_baseline,regressed_vs_baseline,mcnemar_two_sided_p
+0.072,0.047999999999999994,conditioned_robust_tuned,100,10,0.1,0.0552291370606751,0.17436566150491345,10,0,1155.78,11.5578,0,0,1.0
+0.072,0.047999999999999994,conditioned_robust_joint_projection,100,26,0.26,0.18404698464748132,0.3537098944918718,0,26,1319.24,13.1924,1,17,0.00014495849609375

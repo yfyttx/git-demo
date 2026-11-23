@@ -1,0 +1,2 @@
+p_D	LogicalFailureRate	Total	Failures	SyndromeFailures	XSyndromeFailures	ZSyndromeFailures	MeanPhysicalErrors	MeanResidualSymbols	UndetectedLogicalFailures	ExactRecoveryFrames	ExactXFrames	CascadeTrailingRecoveries	CascadeStagedAttempts	CascadeStagedValid	XFallbackAttempts	XFallbackSuccesses	ZSoftFallbackAttempts	ZSoftFallbackSuccesses	RobustAttempts	RobustSelections
+0.06	0	50	0	0	0	0	1688.62	3.6	0	30	50	50	50	50	0	0	0	0	50	0

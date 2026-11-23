@@ -131,19 +131,213 @@ MatrixXi buildLinearSystem(const std::vector<std::pair<int, int>> &Hc_nonzero,
 }
 
 // [实现 2] 高斯消元 (解决 Linker Error)
-std::vector<int> gaussElimination(const Eigen::MatrixXi &system, int mod) {
+std::vector<int> gaussElimination(const Eigen::MatrixXi &system, int mod,
+                                  std::mt19937 &gen) {
     int var_count = system.cols() - 1;
     if (var_count <= 0)
         return {};
+
+    // GF(1024) labels are exponents modulo 1023 = 3 * 11 * 31. Reduce
+    // independently over the three prime fields: Gaussian elimination over
+    // Z/1023Z cannot divide by a non-unit pivot.
+    if (mod == 1023) {
+        constexpr int primes[] = {3, 11, 31};
+        std::vector<std::vector<int>> components;
+        for (int prime : primes) {
+            Eigen::MatrixXi A = system;
+            for (int row = 0; row < A.rows(); ++row)
+                for (int col = 0; col < A.cols(); ++col)
+                    A(row, col) = (A(row, col) % prime + prime) % prime;
+            std::vector<int> pivots;
+            int rank = 0;
+            for (int col = 0; col < var_count && rank < A.rows(); ++col) {
+                int pivot = rank;
+                while (pivot < A.rows() && A(pivot, col) == 0) ++pivot;
+                if (pivot == A.rows()) continue;
+                A.row(rank).swap(A.row(pivot));
+                int inverse = 1;
+                while ((A(rank, col) * inverse) % prime != 1) ++inverse;
+                for (int j = col; j <= var_count; ++j)
+                    A(rank, j) = (A(rank, j) * inverse) % prime;
+                for (int row = 0; row < A.rows(); ++row) {
+                    if (row == rank || A(row, col) == 0) continue;
+                    const int factor = A(row, col);
+                    for (int j = col; j <= var_count; ++j)
+                        A(row, j) = (A(row, j) - factor * A(rank, j) % prime
+                                     + prime) % prime;
+                }
+                pivots.push_back(col);
+                ++rank;
+            }
+            for (int row = rank; row < A.rows(); ++row)
+                if (A(row, var_count) != 0)
+                    throw std::runtime_error("QC label system is inconsistent modulo a CRT prime");
+            std::vector<int> solution(var_count, 0);
+            std::vector<char> is_pivot(var_count, 0);
+            for (int col : pivots) is_pivot[col] = 1;
+            std::uniform_int_distribution<> distribution(0, prime - 1);
+            for (int col = 0; col < var_count; ++col)
+                if (!is_pivot[col]) solution[col] = distribution(gen);
+            for (int row = rank - 1; row >= 0; --row) {
+                const int pivot_col = pivots[row];
+                int value = A(row, var_count);
+                for (int col = pivot_col + 1; col < var_count; ++col)
+                    value = (value - A(row, col) * solution[col] % prime
+                             + prime) % prime;
+                solution[pivot_col] = value;
+            }
+            components.push_back(std::move(solution));
+        }
+        std::vector<int> combined(var_count);
+        for (int col = 0; col < var_count; ++col)
+            combined[col] = (682 * components[0][col]
+                           + 837 * components[1][col]
+                           + 528 * components[2][col]) % mod;
+        for (int row = 0; row < system.rows(); ++row) {
+            long long residual = -system(row, var_count);
+            for (int col = 0; col < var_count; ++col)
+                residual += static_cast<long long>(system(row, col)) * combined[col];
+            if ((residual % mod + mod) % mod != 0)
+                throw std::runtime_error("CRT solution failed the modulo-1023 constraints");
+        }
+        return combined;
+    }
+
+    // The GF(256) label constraints are integer exponent congruences modulo
+    // 255, which is composite. Ordinary Gaussian elimination modulo 255 is
+    // invalid whenever a pivot is not a unit. Preserve the historical result
+    // whenever unit-pivot elimination succeeds; use CRT only for systems that
+    // the legacy routine cannot reduce.
+    if (mod == 255) {
+        Eigen::MatrixXi legacy = system;
+        const int rows = legacy.rows();
+        int rank = 0;
+        std::vector<int> pivots(rows, -1);
+        bool nonunit_pivot = false;
+        for (int col = 0; col < var_count && rank < rows; ++col) {
+            int pivot = rank;
+            while (pivot < rows && legacy(pivot, col) == 0) ++pivot;
+            if (pivot == rows) continue;
+            legacy.row(rank).swap(legacy.row(pivot));
+            int inverse = -1;
+            for (int value = 1; value < mod; ++value)
+                if ((legacy(rank, col) * value) % mod == 1) inverse = value;
+            if (inverse == -1) {
+                nonunit_pivot = true;
+                break;
+            }
+            pivots[rank] = col;
+            for (int j = col; j < legacy.cols(); ++j)
+                legacy(rank, j) = (legacy(rank, j) * inverse) % mod;
+            for (int row = 0; row < rows; ++row) {
+                if (row == rank) continue;
+                const int factor = legacy(row, col);
+                for (int j = col; j < legacy.cols(); ++j) {
+                    const long long value = legacy(row, j) -
+                        static_cast<long long>(factor) * legacy(rank, j);
+                    legacy(row, j) = static_cast<int>((value % mod + mod) % mod);
+                }
+            }
+            ++rank;
+        }
+        if (!nonunit_pivot) {
+            std::vector<int> solution(var_count, 0);
+            std::vector<char> is_pivot(var_count, 0);
+            for (int row = 0; row < rank; ++row) is_pivot[pivots[row]] = 1;
+            std::uniform_int_distribution<> distrib(0, mod - 1);
+            for (int col = 0; col < var_count; ++col)
+                if (!is_pivot[col]) solution[col] = distrib(gen);
+            for (int row = rank - 1; row >= 0; --row) {
+                const int pivot_col = pivots[row];
+                long long sum = 0;
+                for (int col = pivot_col + 1; col < var_count; ++col)
+                    sum += static_cast<long long>(legacy(row, col)) * solution[col];
+                solution[pivot_col] = static_cast<int>(
+                    (legacy(row, var_count) - sum % mod + mod) % mod);
+            }
+            bool valid = true;
+            for (int row = 0; row < system.rows(); ++row) {
+                long long residual = -system(row, var_count);
+                for (int col = 0; col < var_count; ++col)
+                    residual += static_cast<long long>(system(row, col)) * solution[col];
+                valid &= (residual % mod + mod) % mod == 0;
+            }
+            if (valid) return solution;
+            throw std::runtime_error("Legacy modulo-255 solution failed verification");
+        }
+
+        // Solve the square-free CRT components separately, then combine each
+        // variable's residues when legacy unit-pivot elimination gets stuck.
+        constexpr int primes[] = {3, 5, 17};
+        std::vector<std::vector<int>> component_solutions;
+        component_solutions.reserve(3);
+        for (int prime : primes) {
+            Eigen::MatrixXi A = system;
+            for (int row = 0; row < A.rows(); ++row)
+                for (int col = 0; col < A.cols(); ++col)
+                    A(row, col) = (A(row, col) % prime + prime) % prime;
+            std::vector<int> pivots;
+            int rank = 0;
+            for (int col = 0; col < var_count && rank < A.rows(); ++col) {
+                int pivot = rank;
+                while (pivot < A.rows() && A(pivot, col) == 0) ++pivot;
+                if (pivot == A.rows()) continue;
+                A.row(rank).swap(A.row(pivot));
+                int inverse = 1;
+                while ((A(rank, col) * inverse) % prime != 1) ++inverse;
+                for (int j = col; j <= var_count; ++j)
+                    A(rank, j) = (A(rank, j) * inverse) % prime;
+                for (int row = 0; row < A.rows(); ++row) {
+                    if (row == rank || A(row, col) == 0) continue;
+                    const int factor = A(row, col);
+                    for (int j = col; j <= var_count; ++j)
+                        A(row, j) = (A(row, j) - factor * A(rank, j) % prime
+                                      + prime) % prime;
+                }
+                pivots.push_back(col);
+                ++rank;
+            }
+            for (int row = rank; row < A.rows(); ++row)
+                if (A(row, var_count) != 0)
+                    throw std::runtime_error("QC label system is inconsistent modulo a CRT prime");
+            std::vector<int> solution(var_count, 0);
+            std::vector<char> is_pivot(var_count, 0);
+            for (int col : pivots) is_pivot[col] = 1;
+            std::uniform_int_distribution<> distrib(0, prime - 1);
+            for (int col = 0; col < var_count; ++col)
+                if (!is_pivot[col]) solution[col] = distrib(gen);
+            for (int row = rank - 1; row >= 0; --row) {
+                const int pivot_col = pivots[row];
+                int value = A(row, var_count);
+                for (int col = pivot_col + 1; col < var_count; ++col)
+                    value = (value - A(row, col) * solution[col] % prime + prime) % prime;
+                solution[pivot_col] = value;
+            }
+            component_solutions.push_back(std::move(solution));
+        }
+        std::vector<int> combined(var_count, 0);
+        for (int col = 0; col < var_count; ++col) {
+            // CRT idempotents for moduli 3, 5, and 17 are 85, 51, and 120.
+            combined[col] = (85 * component_solutions[0][col]
+                           + 51 * component_solutions[1][col]
+                           + 120 * component_solutions[2][col]) % 255;
+        }
+        for (int row = 0; row < system.rows(); ++row) {
+            long long residual = -system(row, var_count);
+            for (int col = 0; col < var_count; ++col)
+                residual += static_cast<long long>(system(row, col)) * combined[col];
+            if ((residual % mod + mod) % mod != 0)
+                throw std::runtime_error("CRT solution failed the modulo-255 constraints");
+        }
+        return combined;
+    }
 
     Eigen::MatrixXi A = system;
     int rows = A.rows();
 
     if (rows == 0) {
         std::vector<int> x(var_count);
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> distrib(1, mod - 1);
+        std::uniform_int_distribution<> distrib(0, mod - 1);
         for (int i = 0; i < var_count; ++i)
             x[i] = distrib(gen);
         return x;
@@ -186,9 +380,7 @@ std::vector<int> gaussElimination(const Eigen::MatrixXi &system, int mod) {
         is_pivot_var[pivot_col[i]] = true;
 
     // 随机化自由变量
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distrib(1, mod - 1);
+    std::uniform_int_distribution<> distrib(0, mod - 1);
     for (int j = 0; j < var_count; ++j)
         if (!is_pivot_var[j])
             x[j] = distrib(gen);
@@ -200,6 +392,15 @@ std::vector<int> gaussElimination(const Eigen::MatrixXi &system, int mod) {
         for (int j = p_col + 1; j < var_count; ++j)
             sum += (long long)A(i, j) * x[j];
         x[p_col] = (int)(((long long)A(i, var_count) - (sum % mod) + mod) % mod);
+    }
+    for (int i = 0; i < system.rows(); ++i) {
+        long long residual = -system(i, var_count);
+        for (int j = 0; j < var_count; ++j) {
+            residual += static_cast<long long>(system(i, j)) * x[j];
+        }
+        if ((residual % mod + mod) % mod != 0) {
+            throw std::runtime_error("QC label system has no solution for the sampled variables");
+        }
     }
     return x;
 }
@@ -293,4 +494,49 @@ std::vector<int> solveDeltaRow(int m_prime, const Eigen::MatrixXi &Hc, const Eig
         delta_row[N[i]] = delta[i];
     }
     return delta_row;
+}
+
+std::pair<Eigen::SparseMatrix<int>, Eigen::SparseMatrix<int>>
+constructKasaiNonbinaryPair(const Eigen::MatrixXi& hc, const Eigen::MatrixXi& hd,
+                           GF2p& gf, std::mt19937& rng) {
+    if (hc.cols() != hd.cols()) throw std::invalid_argument("QC support widths differ");
+    std::vector<std::pair<int, int>> positions;
+    for (int row = 0; row < hc.rows(); ++row)
+        for (int col = 0; col < hc.cols(); ++col)
+            if (hc(row, col)) positions.emplace_back(row, col);
+    const auto system = buildLinearSystem(positions, hc, hd, gf.getMod());
+    if (system.rows() != hd.rows())
+        throw std::runtime_error("Kasai cycle constraints were not all constructed");
+    constexpr int max_label_attempts = 256;
+    for (int attempt = 0; attempt < max_label_attempts; ++attempt) {
+        const auto exponents = gaussElimination(system, gf.getMod(), rng);
+        Eigen::MatrixXi gamma_dense = Eigen::MatrixXi::Zero(hc.rows(), hc.cols());
+        std::vector<Eigen::Triplet<int>> gamma_entries, delta_entries;
+        for (size_t i = 0; i < positions.size(); ++i) {
+            const auto [row, col] = positions[i];
+            const int value = gf.exp(exponents[i]);
+            gamma_dense(row, col) = value;
+            gamma_entries.emplace_back(row, col, value);
+        }
+        bool support_matches = true;
+        for (int row = 0; row < hd.rows() && support_matches; ++row) {
+            const auto delta = solveDeltaRow(row, hc, hd, gamma_dense, gf);
+            for (int col = 0; col < hd.cols(); ++col) {
+                if ((delta[col] != 0) != (hd(row, col) != 0)) {
+                    support_matches = false;
+                    break;
+                }
+                if (delta[col]) delta_entries.emplace_back(row, col, delta[col]);
+            }
+        }
+        if (!support_matches) continue;
+
+        Eigen::SparseMatrix<int> gamma(hc.rows(), hc.cols());
+        Eigen::SparseMatrix<int> delta(hd.rows(), hd.cols());
+        gamma.setFromTriplets(gamma_entries.begin(), gamma_entries.end());
+        delta.setFromTriplets(delta_entries.begin(), delta_entries.end());
+        return {gamma, delta};
+    }
+    throw std::runtime_error("Could not find GF labels preserving the requested QC support after "
+                             + std::to_string(max_label_attempts) + " attempts");
 }

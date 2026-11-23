@@ -1,58 +1,77 @@
 cmake_minimum_required(VERSION 3.10)
+project(QuantumLDPC LANGUAGES C CXX)
 
-# 项目名称
-project(QuantumLDPC)
-
-# 设置 C++ 标准
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ---------------------------------------------------------
-# 1. 查找依赖库
-# ---------------------------------------------------------
 find_package(Eigen3 REQUIRED)
 
-# ---------------------------------------------------------
-# 2. 定义源文件 (建议使用相对路径确保稳健性)
-# ---------------------------------------------------------
-set(SOURCES
-    src/main.cpp
-    # 关键点：添加下面这个文件，因为 constructBinaryHMatrices 在这里定义
-    src/ldpc_codes/binary_codes.cpp  
-    
-    # 如果你还有其他的工具类，也一并加上
-    # src/gf2p/gf2p.cpp 
-    # src/utils/matrix_utils.cpp 
-
-    # PEG 库文件
+set(QLDPC_COMMON_SOURCES
+    src/gf2p/gf2p.cpp
+    src/ldpc_codes/binary_codes.cpp
+    src/ldpc_codes/nonbinary_codes.cpp
+    src/utils/matrix_utils.cpp
+    src/decoder/NB_BP_Decoder.cpp
+    src/decoder/NB_BP_Factorized.cpp
     peg-unige/BigGirth.C
     peg-unige/Random.C
     peg-unige/CyclesOfGraph.C
 )
 
-# ---------------------------------------------------------
-# 3. 生成可执行文件
-# ---------------------------------------------------------
-# 这里把生成的文件名改为 construct，方便刚才的 Python 脚本调用
-add_executable(construct ${SOURCES})
-
-# ---------------------------------------------------------
-# 4. 包含目录与链接库
-# ---------------------------------------------------------
-target_include_directories(construct PRIVATE
+add_library(qldpc_common STATIC ${QLDPC_COMMON_SOURCES})
+target_include_directories(qldpc_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/peg-unige
-    ${EIGEN3_INCLUDE_DIRS}
 )
+target_link_libraries(qldpc_common PUBLIC Eigen3::Eigen)
 
-target_link_libraries(construct PRIVATE Eigen3::Eigen)
+add_executable(construct src/main.cpp)
+target_link_libraries(construct PRIVATE qldpc_common)
 
-# ---------------------------------------------------------
-# 5. 编译优化 (这对大规模矩阵生成至关重要)
-# ---------------------------------------------------------
-if(MSVC)
-    target_compile_options(construct PRIVATE /O2 /W3)
-else()
-    # 开启 -O3 优化和高级向量化，加快矩阵乘法和 PEG 运行速度
-    target_compile_options(construct PRIVATE -O3 -Wall -march=native)
+add_executable(ldpc_constructor src/main.cpp)
+target_link_libraries(ldpc_constructor PRIVATE qldpc_common)
+
+add_executable(simulate_qec src/simulate_qec.cpp)
+target_link_libraries(simulate_qec PRIVATE qldpc_common)
+
+add_executable(kasai_paper src/kasai_paper.cpp)
+target_link_libraries(kasai_paper PRIVATE qldpc_common)
+
+add_executable(gf256_cascade_construct experiments/gf256_cascade/construct.cpp)
+target_link_libraries(gf256_cascade_construct PRIVATE qldpc_common)
+
+add_executable(gf256_cascade_simulate experiments/gf256_cascade/simulate.cpp)
+target_link_libraries(gf256_cascade_simulate PRIVATE qldpc_common)
+add_executable(audit_small_logical_map experiments/gf256_cascade/audit_small_logical_map.cpp)
+target_link_libraries(audit_small_logical_map PRIVATE qldpc_common)
+
+add_executable(test_gf256_soft_x_prior
+    experiments/gf256_cascade/test_soft_x_prior.cpp
+)
+target_link_libraries(test_gf256_soft_x_prior PRIVATE qldpc_common)
+
+add_executable(test_gf256_cascade_coset_invariants
+    experiments/gf256_cascade/test_cascade_coset_invariants.cpp
+)
+target_link_libraries(test_gf256_cascade_coset_invariants PRIVATE qldpc_common)
+
+add_executable(test_generic_g2_turbo_exact
+    experiments/gf256_cascade/test_generic_g2_turbo_exact.cpp
+)
+target_link_libraries(test_generic_g2_turbo_exact PRIVATE qldpc_common)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(qldpc_common PRIVATE -O3 -Wall)
+    target_compile_options(construct PRIVATE -O3 -Wall)
+    target_compile_options(ldpc_constructor PRIVATE -O3 -Wall)
+    target_compile_options(simulate_qec PRIVATE -O3 -Wall)
+    target_compile_options(kasai_paper PRIVATE -O3 -Wall)
+    target_compile_options(gf256_cascade_construct PRIVATE -O3 -Wall)
+    target_compile_options(gf256_cascade_simulate PRIVATE -O3 -Wall)
+    target_compile_options(test_gf256_soft_x_prior PRIVATE -O3 -Wall)
+    target_compile_options(test_gf256_cascade_coset_invariants PRIVATE -O3 -Wall)
+    target_compile_options(test_generic_g2_turbo_exact PRIVATE -O3 -Wall)
 endif()
+
+add_executable(audit_bp_bridge experiments/gf256_cascade/audit_bp_bridge.cpp)
+target_link_libraries(audit_bp_bridge PRIVATE qldpc_common)

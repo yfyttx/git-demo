@@ -1,0 +1,7 @@
+{
+  "p_D": 0.07125,
+  "x_patterns": 512,
+  "z_patterns_per_x": 512,
+  "pushforward_max_absolute_error": 0.0,
+  "shared_vs_tiled_prior_bp_equal": true
+}
