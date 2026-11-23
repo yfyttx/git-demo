@@ -1,9 +1,10 @@
 # GF(256) 级联码联合译码实验
 
+以下命令默认从仓库根目录运行。历史实验说明中引用的逐帧日志和部分图像位于原实验输出目录，仓库保留复现输入和选定汇总。
+
 ## 一条命令生成 Z 偏置噪声下的 FER 曲线
 
 ```bash
-cd /home/ypc/Projects/ldpc/git-demo
 python3 experiments/gf256_cascade/run_z_bias_fer_curve.py
 ```
 
@@ -89,7 +90,6 @@ python3 experiments/gf256_cascade/run_g2_basis_comparison.py \
 系统式和带状 `G₂` 各跑 300 帧：
 
 ```bash
-cd /home/ypc/Projects/ldpc/git-demo
 cmake -S . -B /tmp/gf256_cascade_build -DCMAKE_BUILD_TYPE=Release
 cmake --build /tmp/gf256_cascade_build --target gf256_cascade_construct gf256_cascade_simulate -j 4
 python3 experiments/gf256_cascade/run_g2_basis_batched.py \
@@ -536,7 +536,7 @@ sigma=35, tau=2`，构造种子 `20261018`；级联内码仍是
 复现自适应版单批次（50 帧）：
 
 ```bash
-cd /home/ypc/Projects/ldpc/git-demo/experiments/gf256_cascade/results/gf256_cascade_curve/run_20261025_001136/matrices
+cd experiments/gf256_cascade/results/gf256_cascade_curve/run_20261025_001136/matrices
 /tmp/gf256_cascade_build/gf256_cascade_simulate 50 20262000 0.0675 conditioned_robust_adaptive
 ```
 

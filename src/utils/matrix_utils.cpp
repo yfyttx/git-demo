@@ -53,7 +53,7 @@ bool verifyNonbinaryOrthogonality(const MatrixXi &H_gamma, const MatrixXi &H_del
 void saveToKN(const Eigen::SparseMatrix<int> &mat, const std::string &filename, const GF2p &gf) {
     int M = mat.rows();
     int N = mat.cols();
-    int q = 64; // GF(64)
+    int q = gf.getSize();
 
     // 1. 统计度数
     std::vector<int> dv(N, 0);

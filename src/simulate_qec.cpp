@@ -223,7 +223,7 @@ int main(int argc, char* argv[]) {
     try {
         if (argc > 5) {
             throw invalid_argument(
-                "Usage: simulate_qec [trials-per-error-rate] [seed] [error-rate] "
+                "Usage: simulate_qec_gf64 [trials-per-error-rate] [seed] [error-rate] "
                 "[direct|cascade|video]");
         }
         const int trials = argc >= 2 ? stoi(argv[1]) : 100;
